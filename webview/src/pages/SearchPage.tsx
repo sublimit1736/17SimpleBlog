@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { articlesApi } from '../api/articles';
 import { authApi } from '../api/auth';
@@ -12,27 +12,33 @@ type SearchType = 'articles' | 'users';
 
 const SearchPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const initialQ = searchParams.get('q') || '';
-  const initialType = (searchParams.get('type') as SearchType) || 'articles';
+  const queryParam = searchParams.get('q') || '';
+  const typeParam = (searchParams.get('type') as SearchType) || 'articles';
 
-  const [q, setQ] = useState(initialQ);
-  const [type, setType] = useState<SearchType>(initialType);
+  const [q, setQ] = useState(queryParam);
+  const [type, setType] = useState<SearchType>(typeParam);
   const [articles, setArticles] = useState<Article[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
   const doSearch = useCallback(async (query: string, searchType: SearchType) => {
-    if (!query.trim()) return;
+    const trimmed = query.trim();
+    if (!trimmed) {
+      setSearched(false);
+      setArticles([]);
+      setUsers([]);
+      return;
+    }
     setLoading(true);
     setSearched(true);
     try {
       if (searchType === 'articles') {
-        const res = await articlesApi.search(query.trim(), 0, 20);
+        const res = await articlesApi.search(trimmed, 0, 20);
         setArticles(res.data.statusCode === 0 ? res.data.data.content : []);
         setUsers([]);
       } else {
-        const res = await authApi.searchByUsername(query.trim());
+        const res = await authApi.searchByUsername(trimmed);
         setUsers(res.data.statusCode === 0 ? res.data.data.content : []);
         setArticles([]);
       }
@@ -40,15 +46,30 @@ const SearchPage: React.FC = () => {
     finally { setLoading(false); }
   }, []);
 
+  useEffect(() => {
+    setQ(queryParam);
+    setType(typeParam);
+    doSearch(queryParam, typeParam);
+  }, [queryParam, typeParam, doSearch]);
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setSearchParams({ q, type });
-    doSearch(q, type);
+    const trimmed = q.trim();
+    if (!trimmed) {
+      setSearchParams({ type });
+      return;
+    }
+    setSearchParams({ q: trimmed, type });
   };
 
   const switchType = (t: SearchType) => {
     setType(t);
-    if (q) { setSearchParams({ q, type: t }); doSearch(q, t); }
+    const trimmed = q.trim();
+    if (trimmed) {
+      setSearchParams({ q: trimmed, type: t });
+    } else {
+      setSearchParams({ type: t });
+    }
   };
 
   return (
@@ -86,7 +107,7 @@ const SearchPage: React.FC = () => {
               <ArticleList
                 articles={articles}
                 loading={loading}
-                emptyText={`没有找到与"${initialQ}"相关的文章`}
+                emptyText={`没有找到与"${queryParam}"相关的文章`}
               />
             )}
             {type === 'users' && !loading && (

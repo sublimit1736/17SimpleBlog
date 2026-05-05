@@ -33,12 +33,12 @@ const WriteArticlePage: React.FC = () => {
       try {
         const res = await articlesApi.getById(Number(id));
         if (res.data.statusCode === 0) {
-          const a: Article = res.data.data;
-          setTitle(a.title);
-          setContent(a.content);
-          setSummary(a.summary || '');
-          setTags((a.tags || []).join(', '));
-          setContentType(a.contentType || 'MARKDOWN');
+          const article: Article = res.data.data;
+          setTitle(article.title);
+          setContent(article.content);
+          setSummary(article.summary || '');
+          setTags((article.tags || []).join(', '));
+          setContentType(article.contentType || 'MARKDOWN');
         }
       } catch { showToast('加载文章失败', 'error'); }
       finally { setFetching(false); }

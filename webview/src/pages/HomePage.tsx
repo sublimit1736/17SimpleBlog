@@ -122,7 +122,7 @@ const HomePage: React.FC = () => {
                     <Tag
                       key={ht.tag}
                       label={`${ht.tag} (${ht.count})`}
-                      linkTo={`/search?type=tags&q=${encodeURIComponent(ht.tag)}`}
+                      linkTo={`/search?type=articles&q=${encodeURIComponent(ht.tag)}`}
                     />
                   ))}
                 </div>

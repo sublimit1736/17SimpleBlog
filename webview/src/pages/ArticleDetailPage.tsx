@@ -263,7 +263,7 @@ const ArticleDetailPage: React.FC = () => {
           <div className={styles.articleHeader}>
             <div className={styles.metaTop}>
               {article.tags?.map((tag) => (
-                <Tag key={tag} label={tag} linkTo={`/search?type=tags&q=${encodeURIComponent(tag)}`} />
+                <Tag key={tag} label={tag} linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`} />
               ))}
             </div>
             <h1 className={styles.title}>{article.title}</h1>
@@ -284,7 +284,7 @@ const ArticleDetailPage: React.FC = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/write?edit=${article.id}`)}
+                    onClick={() => navigate(`/edit/${article.id}`)}
                   >
                     ✏ 编辑
                   </Button>

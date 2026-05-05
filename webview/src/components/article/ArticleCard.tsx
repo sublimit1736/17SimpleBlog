@@ -62,7 +62,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false }
       {article.tags && article.tags.length > 0 && (
         <div className={styles.tags}>
           {article.tags.slice(0, 4).map((tag) => (
-            <Tag key={tag} label={tag} linkTo={`/search?type=tags&q=${encodeURIComponent(tag)}`} />
+            <Tag key={tag} label={tag} linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`} />
           ))}
         </div>
       )}

@@ -4,7 +4,7 @@ import { articlesApi } from '../api/articles';
 import { commentsApi } from '../api/comments';
 import type { Article, Comment } from '../types';
 import { useAuthStore } from '../store/auth';
-import { useToast } from '../components/ui/Toast';
+import { useToast } from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import MarkdownRenderer from '../components/article/MarkdownRenderer';
 import Avatar from '../components/ui/Avatar';

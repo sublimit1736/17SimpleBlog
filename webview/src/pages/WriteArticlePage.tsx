@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { articlesApi } from '../api/articles';
 import { type Article, type ContentType } from '../types';
-import { useToast } from '../components/ui/Toast';
+import { useToast } from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import styles from './WriteArticlePage.module.css';

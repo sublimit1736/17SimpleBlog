@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { notificationsApi } from '../api/notifications';
 import type { Notification } from '../types';
-import { useToast } from '../components/ui/Toast';
+import { useToast } from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { Loading } from '../components/ui/Loading';
@@ -23,6 +23,7 @@ const NotificationsPage: React.FC = () => {
     finally { setLoading(false); }
   }, []);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetch(); }, [fetch]);
 
   const markAll = async () => {

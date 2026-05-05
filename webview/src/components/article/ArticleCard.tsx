@@ -32,6 +32,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false }
 
   const statusInfo = statusLabels[article.status];
 
+  // eslint-disable-next-line no-useless-escape
   const excerpt = article.content.replace(/[#*`>\[\]]/g, '').substring(0, 120);
 
   return (

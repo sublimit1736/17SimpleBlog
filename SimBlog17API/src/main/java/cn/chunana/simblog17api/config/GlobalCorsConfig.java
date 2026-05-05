@@ -12,7 +12,7 @@ import java.util.List;
 @Configuration
 public class GlobalCorsConfig {
 
-    @Value("${app.cors.allowed-origin-patterns:http://localhost:5173,http://127.0.0.1:5173}")
+    @Value("${app.cors.allowed-origin-patterns:http://localhost:*,http://127.0.0.1:*}")
     private List<String> allowedOriginPatterns;
 
     @Value("${app.cors.allowed-methods:GET,POST,PUT,PATCH,DELETE,OPTIONS}")

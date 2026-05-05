@@ -1,8 +1,22 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../store/auth';
 
+const normalizeBaseUrl = (url: string) => url.replace(/\/$/, '');
+
+const resolveApiBaseUrl = () => {
+  const envBaseUrl = import.meta.env.VITE_API_BASE_URL as string | undefined;
+  if (envBaseUrl && envBaseUrl.trim()) return normalizeBaseUrl(envBaseUrl.trim());
+  if (import.meta.env.DEV) {
+    const backendPort = (import.meta.env.VITE_BACKEND_PORT as string | undefined) ?? '8080';
+    return normalizeBaseUrl(`${window.location.protocol}//${window.location.hostname}:${backendPort}/api`);
+  }
+  return '/api';
+};
+
+const apiBaseUrl = resolveApiBaseUrl();
+
 const client = axios.create({
-  baseURL: '/api',
+  baseURL: apiBaseUrl,
   timeout: 15000,
 });
 
@@ -55,7 +69,7 @@ client.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const res = await axios.post('/api/user/auth/refresh', null, {
+        const res = await axios.post(`${apiBaseUrl}/user/auth/refresh`, null, {
           headers: { 'X-Refresh-Token': refreshToken },
         });
         const data = res.data?.data;

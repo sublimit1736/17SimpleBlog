@@ -1,27 +1,13 @@
-import React, { createContext, useContext, useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
+import { ToastContext, type Toast } from './toastContext';
 import styles from './Toast.module.css';
-
-interface Toast {
-  id: number;
-  message: string;
-  type: 'success' | 'error' | 'warning' | 'info';
-}
-
-interface ToastContextValue {
-  showToast: (message: string, type?: Toast['type']) => void;
-}
-
-const ToastContext = createContext<ToastContextValue>({ showToast: () => {} });
-
-export const useToast = () => useContext(ToastContext);
-
-let toastId = 0;
 
 export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [toasts, setToasts] = useState<Toast[]>([]);
+  const toastIdRef = useRef(0);
 
   const showToast = useCallback((message: string, type: Toast['type'] = 'info') => {
-    const id = ++toastId;
+    const id = ++toastIdRef.current;
     setToasts((prev) => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts((prev) => prev.filter((t) => t.id !== id));

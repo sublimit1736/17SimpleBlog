@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { adminApi } from '../api/admin';
 import type { Article, Comment, User } from '../types';
-import { useToast } from '../components/ui/Toast';
+import { useToast } from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import { Loading } from '../components/ui/Loading';
@@ -35,10 +35,12 @@ const AdminPage: React.FC = () => {
     } catch { /* silent */ } finally { setLoading(false); }
   }, []);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (tab === 'pending') fetchPending();
     if (tab === 'comments') fetchComments();
   }, [tab, fetchPending, fetchComments]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const approveArticle = async (articleId: number) => {
     try {

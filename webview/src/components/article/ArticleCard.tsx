@@ -32,7 +32,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false }
 
   const statusInfo = statusLabels[article.status];
 
-  const excerpt = article.content.replace(/[#*`>[\]]/g, '').substring(0, 120);
+  const excerpt = article.content.replace(/[#*`>\u005B\u005D]/g, '').substring(0, 120);
 
   return (
     <article className={styles.card}>

@@ -1,0 +1,1827 @@
+openapi: 3.0.3
+info:
+  title: SimBlog17API
+  version: 1.0.0
+  description: |
+    Lightweight forum backend API.
+    Supports JWT access/refresh tokens, articles, comments, interactions, homepage aggregation, and admin moderation.
+servers:
+  - url: http://localhost:8080
+    description: Local
+
+tags:
+  - name: Auth
+  - name: Article
+  - name: Comment
+  - name: Interaction
+  - name: Media
+  - name: Notification
+  - name: Home
+  - name: Admin
+  - name: Probe
+
+paths:
+  /api/user/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccessRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/user/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserAccessRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/user/auth/profile/{uid}:
+    get:
+      tags: [Auth]
+      summary: Get user profile
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+    put:
+      tags: [Auth]
+      summary: Update username
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUsernameRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/user/auth/profile/{uid}/avatar:
+    put:
+      tags: [Auth]
+      summary: Upload user avatar
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseMediaUploadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/user/auth/password:
+    put:
+      tags: [Auth]
+      summary: Change password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseBoolean'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/user/auth/refresh:
+    post:
+      tags: [Auth]
+      summary: Refresh tokens
+      parameters:
+        - $ref: '#/components/parameters/RefreshTokenHeader'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /api/user/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout and revoke tokens
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/RefreshTokenHeaderOptional'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseBoolean'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/auth/search/by_username:
+    get:
+      tags: [Auth]
+      summary: Search users by username (plain text)
+      parameters:
+        - in: query
+          name: keyword
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageUserAccessResponse'
+
+  /api/user/auth/search/regex/by_username:
+    get:
+      tags: [Auth]
+      summary: Search users by username (regex)
+      parameters:
+        - in: query
+          name: pattern
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageUserAccessResponse'
+
+  /api/articles/new:
+    post:
+      tags: [Article]
+      summary: Create article
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/articles/view/{id}:
+    get:
+      tags: [Article]
+      summary: View article detail
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+
+  /api/articles/all:
+    get:
+      tags: [Article]
+      summary: List published articles
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+
+  /api/articles/by_author/{id}:
+    get:
+      tags: [Article]
+      summary: List articles by author
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+
+  /api/articles/profile/{uid}/drafts:
+    get:
+      tags: [Article]
+      summary: List drafts by user
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/articles/search/by_title:
+    get:
+      tags: [Article]
+      summary: Search articles by title (plain text)
+      parameters:
+        - in: query
+          name: keyword
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+
+  /api/articles/search/by_tags:
+    get:
+      tags: [Article]
+      summary: Search articles by tags (plain text)
+      parameters:
+        - in: query
+          name: keyword
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+
+  /api/articles/search/regex/by_title:
+    get:
+      tags: [Article]
+      summary: Search articles by title (regex)
+      parameters:
+        - in: query
+          name: pattern
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+
+  /api/articles/search/regex/by_tags:
+    get:
+      tags: [Article]
+      summary: Search articles by tags (regex)
+      parameters:
+        - in: query
+          name: pattern
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleResponse'
+
+  /api/articles/draft:
+    post:
+      tags: [Article]
+      summary: Create draft
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/articles/draft/{id}:
+    put:
+      tags: [Article]
+      summary: Update draft
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/articles/draft/{id}/publish:
+    post:
+      tags: [Article]
+      summary: Publish draft
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/articles/update/{id}:
+    put:
+      tags: [Article]
+      summary: Update article
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/articles/hide/{id}:
+    put:
+      tags: [Article]
+      summary: Hide article
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/articles/publish/{id}:
+    put:
+      tags: [Article]
+      summary: Publish article
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/articles/delete/{id}:
+    delete:
+      tags: [Article]
+      summary: Delete article
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/comments:
+    post:
+      tags: [Comment]
+      summary: Create comment or reply
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseCommentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/comments/by_article/{articleId}:
+    get:
+      tags: [Comment]
+      summary: List comments by article
+      parameters:
+        - in: path
+          name: articleId
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageCommentResponse'
+
+  /api/comments/{id}:
+    delete:
+      tags: [Comment]
+      summary: Delete comment
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseCommentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/media/upload:
+    post:
+      tags: [Media]
+      summary: Upload image for article content
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseMediaUploadResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/media/files/{fileName}:
+    get:
+      tags: [Media]
+      summary: Read uploaded image file
+      parameters:
+        - in: path
+          name: fileName
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Binary image stream
+
+  /api/notifications:
+    get:
+      tags: [Notification]
+      summary: List my notifications
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageNotificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/notifications/unread-count:
+    get:
+      tags: [Notification]
+      summary: Get unread notification count
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseLong'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/notifications/{id}/read:
+    put:
+      tags: [Notification]
+      summary: Mark notification as read
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseNotificationResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/notifications/read-all:
+    put:
+      tags: [Notification]
+      summary: Mark all notifications as read
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseLong'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/articles/{id}/like:
+    post:
+      tags: [Interaction]
+      summary: Toggle like
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseBoolean'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/articles/{id}/favorite:
+    post:
+      tags: [Interaction]
+      summary: Toggle favorite
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseBoolean'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/articles/{id}/interactions:
+    get:
+      tags: [Interaction]
+      summary: Get interaction status
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleInteractionResponse'
+
+  /api/articles/profile/{uid}/likes:
+    get:
+      tags: [Interaction]
+      summary: List user's liked articles
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+
+  /api/articles/profile/{uid}/favorites:
+    get:
+      tags: [Interaction]
+      summary: List user's favorited articles
+      parameters:
+        - $ref: '#/components/parameters/UidPath'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+
+  /api/home/latest:
+    get:
+      tags: [Home]
+      summary: Latest published articles
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+
+  /api/home/hot:
+    get:
+      tags: [Home]
+      summary: Hot articles in N days
+      parameters:
+        - in: query
+          name: days
+          required: false
+          schema:
+            type: integer
+            default: 7
+            minimum: 1
+            maximum: 365
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+
+  /api/home/stats:
+    get:
+      tags: [Home]
+      summary: Site stats
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseHomeSiteStatsResponse'
+
+  /api/home/hot-tags:
+    get:
+      tags: [Home]
+      summary: Hot tags
+      parameters:
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseHotTagList'
+
+  /api/home/recent-comments:
+    get:
+      tags: [Home]
+      summary: Recent comments
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageCommentResponse'
+
+  /api/admin/users/{userId}/promote:
+    put:
+      tags: [Admin]
+      summary: Promote user to admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/users/{userId}/demote:
+    put:
+      tags: [Admin]
+      summary: Demote admin to user
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/articles/pending:
+    get:
+      tags: [Admin]
+      summary: List pending articles
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageArticleMetaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/articles/{id}/status:
+    put:
+      tags: [Admin]
+      summary: Update article status
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/ArticleIdPath'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminArticleStatusRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseArticleMetaResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/admin/comments:
+    get:
+      tags: [Admin]
+      summary: List comments by status
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: status
+          required: false
+          schema:
+            type: integer
+            default: 0
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Size'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponsePageCommentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/comments/{id}:
+    delete:
+      tags: [Admin]
+      summary: Delete comment as admin
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseCommentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/admin/comments/{id}/status:
+    put:
+      tags: [Admin]
+      summary: Update comment moderation status
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AdminCommentStatusRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseCommentResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '400':
+          $ref: '#/components/responses/InvalidRequest'
+
+  /api/admin/media/cleanup:
+    post:
+      tags: [Admin]
+      summary: Cleanup orphan media files
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: olderThanDays
+          required: false
+          schema:
+            type: integer
+            default: 7
+            minimum: 0
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiStatusResponseLong'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/public/ping:
+    get:
+      tags: [Probe]
+      summary: Public probe
+      responses:
+        '200':
+          description: OK
+
+  /api/private/ping:
+    get:
+      tags: [Probe]
+      summary: Private probe
+      responses:
+        '200':
+          description: OK
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    InvalidRequest:
+      description: Invalid Request - validation or payload format error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiStatusResponseString'
+          example:
+            statusCode: 2
+            statusMessage: Invalid Request
+            timeStamp: 1778003000000
+            traceId: f84f2d4d-7f13-4bd1-8b63-ec2f58b1f54b
+            data: "Validation failed: username must not be blank"
+    Unauthorized:
+      description: Unauthorized - missing/invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiStatusBase'
+          example:
+            statusCode: 5
+            statusMessage: Unauthorized
+            timeStamp: 1778002000000
+            traceId: 5f8a6ca2-b8bf-4ad4-b3d4-0d7f7dd6a20b
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiStatusBase'
+          example:
+            statusCode: 4
+            statusMessage: Access Denied
+            timeStamp: 1778002000000
+            traceId: 2dbf3d1d-06ee-4a8d-a865-1e8cc7f43a6d
+    TooManyRequests:
+      description: Too Many Requests - rate limit exceeded
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiStatusBase'
+          example:
+            statusCode: 6
+            statusMessage: Too Many Requests
+            timeStamp: 1778002000000
+            traceId: 8a5fe15b-8f2b-4b7a-89df-4f44a13d8d7e
+
+  parameters:
+    UidPath:
+      in: path
+      name: uid
+      required: true
+      schema:
+        type: integer
+        format: int64
+    ArticleIdPath:
+      in: path
+      name: id
+      required: true
+      schema:
+        type: integer
+        format: int64
+    Page:
+      in: query
+      name: page
+      schema:
+        type: integer
+        default: 0
+        minimum: 0
+    Size:
+      in: query
+      name: size
+      schema:
+        type: integer
+        default: 10
+        minimum: 1
+        maximum: 200
+    Sort:
+      in: query
+      name: sort
+      schema:
+        type: string
+        example: publishedTime,desc
+    AuthorizationHeader:
+      in: header
+      name: Authorization
+      required: false
+      schema:
+        type: string
+        example: Bearer <access-token>
+    RefreshTokenHeader:
+      in: header
+      name: X-Refresh-Token
+      required: true
+      schema:
+        type: string
+        example: <refresh-token>
+    RefreshTokenHeaderOptional:
+      in: header
+      name: X-Refresh-Token
+      required: false
+      schema:
+        type: string
+        example: <refresh-token>
+
+  schemas:
+    UserRole:
+      type: string
+      enum: [USER, ADMIN]
+
+    ArticleContentType:
+      type: string
+      enum: [PLAIN_TEXT, MARKDOWN, HTML]
+
+    UserAccessRequest:
+      type: object
+      required: [username, password]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+        password:
+          type: string
+          maxLength: 128
+
+    UpdateUsernameRequest:
+      type: object
+      required: [username]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 32
+
+    ChangePasswordRequest:
+      type: object
+      required: [oldPassword, newPassword]
+      properties:
+        oldPassword:
+          type: string
+          maxLength: 128
+        newPassword:
+          type: string
+          maxLength: 128
+
+    UserAccessResponse:
+      type: object
+      example:
+        id: 1001
+        username: demo_user
+        avatarUrl: /api/media/files/avatar_1001.png
+        role: USER
+        createTime: 2026-05-05T10:00:00
+        accessToken: <access-token>
+        refreshToken: <refresh-token>
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        avatarUrl:
+          type: string
+          nullable: true
+        role:
+          $ref: '#/components/schemas/UserRole'
+        createTime:
+          type: string
+          format: date-time
+        accessToken:
+          type: string
+          nullable: true
+        refreshToken:
+          type: string
+          nullable: true
+
+    ArticleRequest:
+      type: object
+      required: [title, content, contentType, authorId]
+      properties:
+        title:
+          type: string
+          maxLength: 100
+        content:
+          type: string
+        contentType:
+          $ref: '#/components/schemas/ArticleContentType'
+        authorId:
+          type: integer
+          format: int64
+        tags:
+          type: string
+          maxLength: 255
+
+    ArticleResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        content:
+          type: string
+        contentType:
+          $ref: '#/components/schemas/ArticleContentType'
+        preview:
+          type: string
+        authorId:
+          type: integer
+          format: int64
+        publishedTime:
+          type: string
+          format: date-time
+        updatedTime:
+          type: string
+          format: date-time
+        viewCount:
+          type: integer
+        tags:
+          type: string
+        status:
+          type: integer
+
+    ArticleMetaResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        title:
+          type: string
+        preview:
+          type: string
+        contentType:
+          $ref: '#/components/schemas/ArticleContentType'
+        authorId:
+          type: integer
+          format: int64
+        publishedTime:
+          type: string
+          format: date-time
+        updatedTime:
+          type: string
+          format: date-time
+        viewCount:
+          type: integer
+        tags:
+          type: string
+        status:
+          type: integer
+
+    CommentRequest:
+      type: object
+      required: [articleId, content]
+      properties:
+        articleId:
+          type: integer
+          format: int64
+        content:
+          type: string
+          maxLength: 2000
+        parentCommentId:
+          type: integer
+          format: int64
+          nullable: true
+
+    CommentResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        articleId:
+          type: integer
+          format: int64
+        authorId:
+          type: integer
+          format: int64
+        parentCommentId:
+          type: integer
+          format: int64
+          nullable: true
+        content:
+          type: string
+        createTime:
+          type: string
+          format: date-time
+        status:
+          type: integer
+
+    MediaUploadResponse:
+      type: object
+      example:
+        id: 501
+        url: /api/media/files/20260505_abc123.png
+        originalFileName: cover.png
+        storedFileName: 20260505_abc123.png
+        contentType: image/png
+        sizeBytes: 102400
+      properties:
+        id:
+          type: integer
+          format: int64
+        url:
+          type: string
+        originalFileName:
+          type: string
+        storedFileName:
+          type: string
+        contentType:
+          type: string
+        sizeBytes:
+          type: integer
+          format: int64
+
+    NotificationResponse:
+      type: object
+      example:
+        id: 3001
+        type: MODERATION
+        targetType: ARTICLE
+        targetId: 42
+        title: 文章审核结果
+        message: 你的文章已审核通过并发布
+        status: 0
+        createTime: 2026-05-05T11:20:00
+        readTime: null
+      properties:
+        id:
+          type: integer
+          format: int64
+        type:
+          type: string
+        targetType:
+          type: string
+        targetId:
+          type: integer
+          format: int64
+        title:
+          type: string
+        message:
+          type: string
+        status:
+          type: integer
+        createTime:
+          type: string
+          format: date-time
+        readTime:
+          type: string
+          format: date-time
+          nullable: true
+
+    ArticleInteractionResponse:
+      type: object
+      properties:
+        likeCount:
+          type: integer
+          format: int64
+        favoriteCount:
+          type: integer
+          format: int64
+        likedByCurrentUser:
+          type: boolean
+        favoritedByCurrentUser:
+          type: boolean
+
+    HomeSiteStatsResponse:
+      type: object
+      properties:
+        totalUsers:
+          type: integer
+          format: int64
+        totalArticles:
+          type: integer
+          format: int64
+        totalComments:
+          type: integer
+          format: int64
+        totalViews:
+          type: integer
+          format: int64
+
+    HomeHotTagEntry:
+      type: object
+      properties:
+        tag:
+          type: string
+        count:
+          type: integer
+          format: int64
+
+    AdminArticleStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: integer
+          minimum: 0
+          maximum: 5
+
+    AdminCommentStatusRequest:
+      type: object
+      required: [status]
+      example:
+        status: 1
+      properties:
+        status:
+          type: integer
+          minimum: 0
+          maximum: 3
+
+    PageArticleMetaResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleMetaResponse'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+
+    PageArticleResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArticleResponse'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+
+    PageCommentResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommentResponse'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+
+    PageUserAccessResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserAccessResponse'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+
+    PageNotificationResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/NotificationResponse'
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+        number:
+          type: integer
+        size:
+          type: integer
+
+    ApiStatusBase:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        statusMessage:
+          type: string
+        timeStamp:
+          type: integer
+          format: int64
+        traceId:
+          type: string
+
+    ApiStatusResponseBoolean:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              type: boolean
+
+    ApiStatusResponseString:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              type: string
+
+    ApiStatusResponseLong:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              type: integer
+              format: int64
+
+    ApiStatusResponseUserAccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/UserAccessResponse'
+
+    ApiStatusResponseArticleResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ArticleResponse'
+
+    ApiStatusResponseArticleMetaResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ArticleMetaResponse'
+
+    ApiStatusResponseCommentResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/CommentResponse'
+
+    ApiStatusResponseMediaUploadResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/MediaUploadResponse'
+
+    ApiStatusResponseNotificationResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/NotificationResponse'
+
+    ApiStatusResponseArticleInteractionResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/ArticleInteractionResponse'
+
+    ApiStatusResponseHomeSiteStatsResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/HomeSiteStatsResponse'
+
+    ApiStatusResponseHotTagList:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              type: array
+              items:
+                $ref: '#/components/schemas/HomeHotTagEntry'
+
+    ApiStatusResponsePageArticleMetaResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PageArticleMetaResponse'
+
+    ApiStatusResponsePageArticleResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PageArticleResponse'
+
+    ApiStatusResponsePageCommentResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PageCommentResponse'
+
+    ApiStatusResponsePageUserAccessResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PageUserAccessResponse'
+
+    ApiStatusResponsePageNotificationResponse:
+      allOf:
+        - $ref: '#/components/schemas/ApiStatusBase'
+        - type: object
+          properties:
+            data:
+              $ref: '#/components/schemas/PageNotificationResponse'
+

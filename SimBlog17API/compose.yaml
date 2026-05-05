@@ -1,0 +1,19 @@
+services:
+  postgres:
+    image: "${POSTGRES_IMAGE:-postgres:latest}"
+    labels:
+      org.springframework.boot.ignore: "true"
+    environment:
+      POSTGRES_DB: "${POSTGRES_DB:-simpleblog}"
+      POSTGRES_USER: "${POSTGRES_USER:-postgres}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:-change_me}"
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  redis:
+    image: "${REDIS_IMAGE:-redis:latest}"
+    labels:
+      org.springframework.boot.ignore: "true"
+    command: [ "redis-server", "--requirepass", "${REDIS_PASSWORD:-change_me}" ]
+    ports:
+      - "${REDIS_PORT:-6379}:6379"

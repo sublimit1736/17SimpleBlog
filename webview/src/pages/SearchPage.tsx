@@ -46,11 +46,13 @@ const SearchPage: React.FC = () => {
     finally { setLoading(false); }
   }, []);
 
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     setQ(queryParam);
     setType(typeParam);
     doSearch(queryParam, typeParam);
   }, [queryParam, typeParam, doSearch]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

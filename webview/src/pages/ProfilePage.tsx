@@ -4,7 +4,7 @@ import { authApi } from '../api/auth';
 import { articlesApi } from '../api/articles';
 import type { User, Article } from '../types';
 import { useAuthStore } from '../store/auth';
-import { useToast } from '../components/ui/Toast';
+import { useToast } from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import ArticleList from '../components/article/ArticleList';
 import Pagination from '../components/ui/Pagination';
@@ -66,7 +66,9 @@ const ProfilePage: React.FC = () => {
     }
   }, [userId, tab, page]);
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { fetchArticles(); }, [fetchArticles]);
 
   const handleUpdateUsername = async () => {

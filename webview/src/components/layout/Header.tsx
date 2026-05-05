@@ -5,7 +5,7 @@ import { useUIStore } from '../../store/ui';
 import { authApi } from '../../api/auth';
 import { notificationsApi } from '../../api/notifications';
 import Avatar from '../ui/Avatar';
-import { useToast } from '../ui/Toast';
+import { useToast } from '../ui/toastContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {

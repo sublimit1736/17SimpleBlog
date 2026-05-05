@@ -1,0 +1,46 @@
+.tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-weight: 500;
+  cursor: default;
+  transition: all var(--transition);
+  text-decoration: none;
+  border: none;
+}
+
+.tag.sm {
+  padding: 2px 10px;
+  font-size: 0.75rem;
+}
+.tag.md {
+  padding: 4px 14px;
+  font-size: 0.85rem;
+}
+
+.default {
+  background: rgba(99, 102, 241, 0.1);
+  color: var(--color-primary);
+}
+.default:hover {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+.outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+.outline:hover {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.filled {
+  background: var(--color-gradient);
+  color: #fff;
+}
+
+a.tag, button.tag {
+  cursor: pointer;
+}

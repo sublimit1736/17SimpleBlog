@@ -8,7 +8,7 @@ SimBlog17API - Testcontainers 与 Docker Compose 使用指南
 ## 前置条件
 
 - Docker daemon 已运行
-- Java 25
+- Java 17
 - Maven wrapper（`mvnw`）
 - 项目根目录存在 `.env` 文件
 

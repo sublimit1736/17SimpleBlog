@@ -1,0 +1,89 @@
+.searchBar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--transition);
+}
+.searchInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+}
+
+.searchBtn {
+  padding: 12px 20px;
+  background: var(--color-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity var(--transition);
+}
+.searchBtn:hover { opacity: 0.9; }
+
+.typeSwitch {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+}
+
+.typeBtn {
+  padding: 8px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+.typeBtn:hover { color: var(--color-text); }
+.typeActive {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: white !important;
+}
+
+.userList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.userCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: inherit;
+  transition: box-shadow var(--transition);
+}
+.userCard:hover { box-shadow: var(--shadow-md); }
+
+.userUsername {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.userRole {
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}

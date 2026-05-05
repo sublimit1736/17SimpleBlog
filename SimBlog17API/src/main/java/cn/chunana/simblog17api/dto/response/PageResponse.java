@@ -30,7 +30,9 @@ public record PageResponse<T extends Serializable>(
 
 ) implements Serializable {
 
-    /** 从 Spring Data Page 对象构造 */
+    /**
+     * 从 Spring Data Page 对象构造
+     */
     public static <T extends Serializable> PageResponse<T> from(Page<T> page) {
         return new PageResponse<>(
                 page.getContent(),

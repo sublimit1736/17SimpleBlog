@@ -11,14 +11,14 @@ import java.util.regex.Pattern;
 public final class HtmlSanitizer {
 
     private static final Safelist ALLOWLIST = Safelist.relaxed()
-            .removeProtocols("a", "href", "ftp", "mailto")
-            .removeProtocols("img", "src", "data")
-            .addProtocols("a", "href", "http", "https")
-            .addProtocols("img", "src", "http", "https");
+                                                      .removeProtocols("a", "href", "ftp", "mailto")
+                                                      .removeProtocols("img", "src", "data")
+                                                      .addProtocols("a", "href", "http", "https")
+                                                      .addProtocols("img", "src", "http", "https");
 
     private static final Pattern FORBIDDEN_JS_PATTERN = Pattern.compile(
             "(?i)(<\\s*script\\b|javascript\\s*:|on[a-z]+\\s*=)"
-    );
+                                                                       );
 
     private HtmlSanitizer() {
     }

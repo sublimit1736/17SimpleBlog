@@ -16,7 +16,7 @@ import java.util.UUID;
 @Component
 public class JwtUtils {
 
-    private static final String ACCESS_TOKEN_TYPE = "access";
+    private static final String ACCESS_TOKEN_TYPE  = "access";
     private static final String REFRESH_TOKEN_TYPE = "refresh";
 
     @Value("${app.jwt.secret}")
@@ -93,13 +93,13 @@ public class JwtUtils {
                             .parseSignedClaims(token)
                             .getPayload();
 
-        String subject = claims.getSubject();
+        String subject   = claims.getSubject();
         String tokenType = claims.get("tokenType", String.class);
-        String role = claims.get("role", String.class);
+        String role      = claims.get("role", String.class);
         if (subject == null || subject.isBlank()
-                || role == null || role.isBlank()
-                || tokenType == null || !requiredType.equals(tokenType)
-                || claims.getId() == null || claims.getId().isBlank()) {
+            || role == null || role.isBlank()
+            || tokenType == null || !requiredType.equals(tokenType)
+            || claims.getId() == null || claims.getId().isBlank()) {
             throw new IllegalArgumentException("Invalid JWT claims");
         }
         return claims;

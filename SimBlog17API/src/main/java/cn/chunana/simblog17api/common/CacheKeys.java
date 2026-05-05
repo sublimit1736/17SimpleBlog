@@ -6,7 +6,7 @@ package cn.chunana.simblog17api.common;
 public enum CacheKeys {
     ;
 
-    public static final String HOME_PAGEABLE = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()";
+    public static final String HOME_PAGEABLE      = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()";
     public static final String HOME_DAYS_PAGEABLE = "#days + '-' + #pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()";
 }
 

@@ -1,114 +1,128 @@
 .editor {
-  max-width: 860px;
-  margin: 32px auto;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 36px;
-  box-shadow: var(--shadow-sm);
+    max-width: 860px;
+    margin: 32px auto;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    box-shadow: var(--shadow-sm);
 }
 
 .heading {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 24px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 24px;
 }
 
 .titleInput {
-  width: 100%;
-  font-size: 1.6rem;
-  font-weight: 600;
-  padding: 10px 0;
-  border: none;
-  border-bottom: 2px solid var(--color-border);
-  background: transparent;
-  color: var(--color-text);
-  margin-bottom: 20px;
-  outline: none;
-  transition: border-color var(--transition);
-  box-sizing: border-box;
+    width: 100%;
+    font-size: 1.6rem;
+    font-weight: 600;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 2px solid var(--color-border);
+    background: transparent;
+    color: var(--color-text);
+    margin-bottom: 20px;
+    outline: none;
+    transition: border-color var(--transition);
+    box-sizing: border-box;
 }
-.titleInput:focus { border-bottom-color: var(--color-primary); }
-.titleInput::placeholder { color: var(--color-text-muted); }
+
+.titleInput:focus {
+    border-bottom-color: var(--color-primary);
+}
+
+.titleInput::placeholder {
+    color: var(--color-text-muted);
+}
 
 .metaRow {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 16px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 
 .field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 16px;
 }
 
 .label {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
 }
 
 .select, .input {
-  padding: 9px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: 0.9rem;
+    padding: 9px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.9rem;
 }
+
 .select:focus, .input:focus {
-  outline: none;
-  border-color: var(--color-primary);
+    outline: none;
+    border-color: var(--color-primary);
 }
 
 .summaryArea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: 0.9rem;
-  resize: vertical;
-  box-sizing: border-box;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.9rem;
+    resize: vertical;
+    box-sizing: border-box;
 }
+
 .summaryArea:focus {
-  outline: none;
-  border-color: var(--color-primary);
+    outline: none;
+    border-color: var(--color-primary);
 }
 
 .contentArea {
-  width: 100%;
-  min-height: 420px;
-  padding: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-bg);
-  color: var(--color-text);
-  font-size: 0.95rem;
-  font-family: 'Fira Code', 'Cascadia Code', monospace;
-  resize: vertical;
-  line-height: 1.7;
-  box-sizing: border-box;
-  margin-bottom: 20px;
+    width: 100%;
+    min-height: 420px;
+    padding: 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg);
+    color: var(--color-text);
+    font-size: 0.95rem;
+    font-family: 'Fira Code', 'Cascadia Code', monospace;
+    resize: vertical;
+    line-height: 1.7;
+    box-sizing: border-box;
+    margin-bottom: 20px;
 }
+
 .contentArea:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
 }
 
 .actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  flex-wrap: wrap;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 640px) {
-  .editor { padding: 20px; }
-  .metaRow { flex-direction: column; }
+    .editor {
+        padding: 20px;
+    }
+
+    .metaRow {
+        flex-direction: column;
+    }
 }

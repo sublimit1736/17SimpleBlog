@@ -24,7 +24,7 @@ import java.util.UUID;
 public class MediaServiceImpl implements MediaService {
 
     private final MediaAssetRepository mediaAssetRepository;
-    private final UserRepository userRepository;
+    private final UserRepository       userRepository;
 
     @Value("${app.media.storage-path:uploads}")
     private String storagePath;
@@ -36,9 +36,9 @@ public class MediaServiceImpl implements MediaService {
     public MediaUploadResponse uploadImage(MultipartFile file, Long uploaderId) {
         validateImage(file);
 
-        Path root = ensureStorageDirectory();
+        Path   root           = ensureStorageDirectory();
         String storedFileName = buildStoredFileName(file.getOriginalFilename());
-        Path target = root.resolve(storedFileName);
+        Path   target         = root.resolve(storedFileName);
 
         copyFile(file, target);
 
@@ -103,15 +103,16 @@ public class MediaServiceImpl implements MediaService {
             Path root = Path.of(storagePath).toAbsolutePath().normalize();
             Files.createDirectories(root);
             return root;
-        } catch (IOException exception) {
+        }
+        catch (IOException exception) {
             throw new IllegalStateException("Failed to initialize media storage", exception);
         }
     }
 
     private String buildStoredFileName(String originalName) {
         String extension = "";
-        String safeName = safeOriginalName(originalName);
-        int dot = safeName.lastIndexOf('.');
+        String safeName  = safeOriginalName(originalName);
+        int    dot       = safeName.lastIndexOf('.');
         if (dot >= 0 && dot < safeName.length() - 1) {
             extension = safeName.substring(dot);
         }
@@ -128,7 +129,8 @@ public class MediaServiceImpl implements MediaService {
     private void copyFile(MultipartFile file, Path target) {
         try {
             Files.copy(file.getInputStream(), target, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException exception) {
+        }
+        catch (IOException exception) {
             throw new IllegalStateException("Failed to store uploaded image", exception);
         }
     }

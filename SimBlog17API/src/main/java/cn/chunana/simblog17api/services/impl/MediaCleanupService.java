@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 public class MediaCleanupService {
 
     private final MediaAssetRepository mediaAssetRepository;
-    private final UserRepository userRepository;
-    private final ArticleRepository articleRepository;
+    private final UserRepository       userRepository;
+    private final ArticleRepository    articleRepository;
 
     @Value("${app.media.storage-path:uploads}")
     private String storagePath;
@@ -55,14 +55,14 @@ public class MediaCleanupService {
             throw new IllegalArgumentException("olderThanDays must be >= 0");
         }
 
-        LocalDateTime threshold = LocalDateTime.now().minusDays(olderThanDays);
+        LocalDateTime    threshold  = LocalDateTime.now().minusDays(olderThanDays);
         List<MediaAsset> candidates = mediaAssetRepository.findByCreateTimeBefore(threshold);
         if (candidates.isEmpty()) {
             return 0;
         }
 
         Set<String> referencedUrls = collectReferencedUrls();
-        Path root = Path.of(storagePath).toAbsolutePath().normalize();
+        Path        root           = Path.of(storagePath).toAbsolutePath().normalize();
 
         long deleted = 0;
         for (MediaAsset media : candidates) {
@@ -108,7 +108,8 @@ public class MediaCleanupService {
                 return;
             }
             Files.deleteIfExists(target);
-        } catch (IOException exception) {
+        }
+        catch (IOException exception) {
             log.warn("media.cleanup.file_delete_failed path={} reason={}", target, exception.getMessage());
         }
     }

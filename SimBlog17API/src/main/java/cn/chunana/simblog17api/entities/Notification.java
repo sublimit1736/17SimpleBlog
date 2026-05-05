@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 public class Notification {
 
     public static final int STATUS_UNREAD = 0;
-    public static final int STATUS_READ = 1;
+    public static final int STATUS_READ   = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

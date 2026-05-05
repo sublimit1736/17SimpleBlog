@@ -13,7 +13,7 @@ import java.time.Duration;
 @RequiredArgsConstructor
 public class TokenSecurityService {
 
-    private static final String REVOKED_PREFIX = "auth:revoked:";
+    private static final String REVOKED_PREFIX    = "auth:revoked:";
     private static final String RATE_LIMIT_PREFIX = "auth:rl:";
 
     private final StringRedisTemplate stringRedisTemplate;
@@ -39,8 +39,8 @@ public class TokenSecurityService {
             return false;
         }
 
-        String key = RATE_LIMIT_PREFIX + bucketKey;
-        Long count = stringRedisTemplate.opsForValue().increment(key);
+        String key   = RATE_LIMIT_PREFIX + bucketKey;
+        Long   count = stringRedisTemplate.opsForValue().increment(key);
         if (count == null) {
             return true;
         }
@@ -58,14 +58,15 @@ public class TokenSecurityService {
 
     private String sha256(String value) {
         try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(value.getBytes(StandardCharsets.UTF_8));
+            MessageDigest digest  = MessageDigest.getInstance("SHA-256");
+            byte[]        hash    = digest.digest(value.getBytes(StandardCharsets.UTF_8));
             StringBuilder builder = new StringBuilder(hash.length * 2);
             for (byte b : hash) {
                 builder.append(String.format("%02x", b));
             }
             return builder.toString();
-        } catch (NoSuchAlgorithmException exception) {
+        }
+        catch (NoSuchAlgorithmException exception) {
             throw new IllegalStateException("SHA-256 algorithm is unavailable", exception);
         }
     }

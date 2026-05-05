@@ -77,8 +77,8 @@ public final class ArticleMapper {
                 ? content.replaceAll("<[^>]+>", " ")
                 : content;
 
-        String compact = normalized.trim().replaceAll("\\s+", " ");
-        int previewLength = Math.min(compact.length(), 120);
+        String compact       = normalized.trim().replaceAll("\\s+", " ");
+        int    previewLength = Math.min(compact.length(), 120);
         return compact.substring(0, previewLength);
     }
 

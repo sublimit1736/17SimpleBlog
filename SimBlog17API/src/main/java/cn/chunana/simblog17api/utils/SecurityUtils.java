@@ -8,7 +8,9 @@ public final class SecurityUtils {
     private SecurityUtils() {
     }
 
-    /** 返回 JWT subject 中存储的 userId，匿名时返回 null。 */
+    /**
+     * 返回 JWT subject 中存储的 userId，匿名时返回 null。
+     */
     public static Long getCurrentUserId(Authentication auth) {
         if (!isAuthenticated(auth)) {
             return null;
@@ -16,14 +18,18 @@ public final class SecurityUtils {
         return Long.valueOf(auth.getName());
     }
 
-    /** 判断当前请求是否携带有效认证（非匿名）。 */
+    /**
+     * 判断当前请求是否携带有效认证（非匿名）。
+     */
     public static boolean isAuthenticated(Authentication auth) {
         return auth != null
-                && auth.isAuthenticated()
-                && !(auth instanceof AnonymousAuthenticationToken);
+               && auth.isAuthenticated()
+               && !(auth instanceof AnonymousAuthenticationToken);
     }
 
-    /** 判断当前用户是否具有 ADMIN 角色。 */
+    /**
+     * 判断当前用户是否具有 ADMIN 角色。
+     */
     public static boolean isAdmin(Authentication auth) {
         if (!isAuthenticated(auth)) {
             return false;

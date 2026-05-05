@@ -18,7 +18,7 @@ import java.util.UUID;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class TraceIdFilter extends OncePerRequestFilter {
 
-    public static final String TRACE_ID_HEADER = "X-Trace-Id";
+    public static final String TRACE_ID_HEADER  = "X-Trace-Id";
     public static final String TRACE_ID_MDC_KEY = "traceId";
 
     @Override
@@ -32,7 +32,8 @@ public class TraceIdFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } finally {
+        }
+        finally {
             MDC.remove(TRACE_ID_MDC_KEY);
         }
     }

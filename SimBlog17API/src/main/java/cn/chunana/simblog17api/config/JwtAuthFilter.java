@@ -26,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtUtils jwtUtils;
+    private final JwtUtils             jwtUtils;
     private final TokenSecurityService tokenSecurityService;
 
     @Override
@@ -45,7 +45,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 Claims claims = jwtUtils.parseAccessToken(token);
 
                 String userId = claims.getSubject();
-                String role = claims.get("role", String.class);
+                String role   = claims.get("role", String.class);
 
                 Long.parseLong(userId);
                 cn.chunana.simblog17api.entities.User.UserRole.valueOf(role);
@@ -57,7 +57,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(auth);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 SecurityContextHolder.clearContext();
                 log.debug("JWT validation failed: {}", e.getMessage());
             }

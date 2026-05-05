@@ -40,17 +40,23 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
                                            @Param("status") Integer status,
                                            Pageable pageable);
 
-    /** 时间窗口内按浏览量降序排列的热门文章 */
+    /**
+     * 时间窗口内按浏览量降序排列的热门文章
+     */
     @Query("SELECT a FROM Article a WHERE a.status = 1 AND a.publishedTime >= :since ORDER BY a.viewCount DESC")
     Page<Article> findHotArticles(@Param("since") LocalDateTime since, Pageable pageable);
 
     long countByStatus(int status);
 
-    /** 所有已发布文章的总浏览量 */
+    /**
+     * 所有已发布文章的总浏览量
+     */
     @Query("SELECT COALESCE(SUM(a.viewCount), 0) FROM Article a WHERE a.status = 1")
     long sumViewCount();
 
-    /** 获取所有已发布文章的 tags 字段（用于统计热门标签） */
+    /**
+     * 获取所有已发布文章的 tags 字段（用于统计热门标签）
+     */
     @Query("SELECT a.tags FROM Article a WHERE a.status = 1 AND a.tags IS NOT NULL AND a.tags <> ''")
     List<String> findAllPublishedTags();
 

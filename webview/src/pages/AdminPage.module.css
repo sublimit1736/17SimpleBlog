@@ -1,109 +1,118 @@
 .heading {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin-bottom: 24px;
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 24px;
 }
 
 .tabBar {
-  display: flex;
-  border-bottom: 2px solid var(--color-border);
-  margin-bottom: 28px;
-  gap: 4px;
+    display: flex;
+    border-bottom: 2px solid var(--color-border);
+    margin-bottom: 28px;
+    gap: 4px;
 }
 
 .tabBtn {
-  padding: 10px 20px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-secondary);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  transition: color var(--transition), border-color var(--transition);
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: color var(--transition), border-color var(--transition);
 }
-.tabBtn:hover { color: var(--color-text); }
+
+.tabBtn:hover {
+    color: var(--color-text);
+}
+
 .tabActive {
-  color: var(--color-primary) !important;
-  border-bottom-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+    border-bottom-color: var(--color-primary) !important;
 }
 
 .list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  flex-wrap: wrap;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    flex-wrap: wrap;
 }
 
 .rowInfo {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
 }
 
 .rowActions {
-  display: flex;
-  gap: 6px;
-  flex-shrink: 0;
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
 }
 
 .articleTitle {
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--color-text);
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-.articleTitle:hover { color: var(--color-primary); }
+
+.articleTitle:hover {
+    color: var(--color-primary);
+}
 
 .commentContent {
-  font-size: 0.9rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .meta {
-  font-size: 0.8rem;
-  color: var(--color-text-secondary);
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
 }
+
 .meta a {
-  color: var(--color-primary);
-  text-decoration: none;
+    color: var(--color-primary);
+    text-decoration: none;
 }
 
 .userSearch {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
 }
 
 .searchInput {
-  flex: 1;
-  padding: 10px 14px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text);
-  font-size: 0.9rem;
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.9rem;
 }
+
 .searchInput:focus {
-  outline: none;
-  border-color: var(--color-primary);
+    outline: none;
+    border-color: var(--color-primary);
 }

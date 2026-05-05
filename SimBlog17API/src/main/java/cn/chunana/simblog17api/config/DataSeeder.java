@@ -57,7 +57,8 @@ public class DataSeeder implements CommandLineRunner {
                                  .build();
                 userRepository.save(admin);
                 log.info("Default admin user '{}' created.", adminUsername);
-            } else {
+            }
+            else {
                 log.debug("Admin user '{}' already exists, skipping seed.", adminUsername);
             }
         }

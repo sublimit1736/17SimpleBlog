@@ -138,7 +138,8 @@ public class UserAccessServiceImpl implements UserAccessService {
         }
         try {
             Pattern.compile(pattern);
-        } catch (PatternSyntaxException exception) {
+        }
+        catch (PatternSyntaxException exception) {
             throw new IllegalArgumentException("invalid regex pattern");
         }
     }

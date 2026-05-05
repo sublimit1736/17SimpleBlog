@@ -27,9 +27,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ArticleInteractionServiceImpl implements ArticleInteractionService {
 
-    private final ArticleLikeRepository articleLikeRepository;
+    private final ArticleLikeRepository     articleLikeRepository;
     private final ArticleFavoriteRepository articleFavoriteRepository;
-    private final ArticleRepository articleRepository;
+    private final ArticleRepository         articleRepository;
 
     @Override
     public boolean toggleLike(Long articleId, Long userId) {
@@ -68,10 +68,10 @@ public class ArticleInteractionServiceImpl implements ArticleInteractionService 
     @Override
     @Transactional(readOnly = true)
     public ArticleInteractionResponse getInteractionStatus(Long articleId, Long userId) {
-        long likeCount = articleLikeRepository.countByArticleId(articleId);
+        long likeCount     = articleLikeRepository.countByArticleId(articleId);
         long favoriteCount = articleFavoriteRepository.countByArticleId(articleId);
 
-        boolean liked = userId != null && articleLikeRepository.existsByArticleIdAndUserId(articleId, userId);
+        boolean liked   = userId != null && articleLikeRepository.existsByArticleIdAndUserId(articleId, userId);
         boolean favored = userId != null && articleFavoriteRepository.existsByArticleIdAndUserId(articleId, userId);
 
         return ArticleInteractionResponse.builder()
@@ -106,7 +106,7 @@ public class ArticleInteractionServiceImpl implements ArticleInteractionService 
                                       articleIdPage.getSize());
         }
 
-        List<Article> articles = articleRepository.findAllById(articleIds);
+        List<Article>      articles   = articleRepository.findAllById(articleIds);
         Map<Long, Article> articleMap = new LinkedHashMap<>();
         for (Article article : articles) {
             if (article.getId() != null) {

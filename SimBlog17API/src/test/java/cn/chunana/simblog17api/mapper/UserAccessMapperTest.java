@@ -24,7 +24,7 @@ class UserAccessMapperTest {
     @Test
     void toUserAccessResponseShouldMapVisibleFieldsOnly() {
         LocalDateTime createTime = LocalDateTime.of(2026, 4, 11, 10, 0);
-        User user = new User(1L, "alice", null, "$2a$10$encoded", User.UserRole.USER, createTime);
+        User          user       = new User(1L, "alice", null, "$2a$10$encoded", User.UserRole.USER, createTime);
 
         UserAccessResponse response = UserAccessMapper.toUserAccessResponse(user);
 

@@ -29,8 +29,8 @@ import java.util.regex.PatternSyntaxException;
 @RequiredArgsConstructor
 public class ArticleServiceImpl implements ArticleService {
 
-    private final ArticleRepository articleRepository;
-    private final UserRepository userRepository;
+    private final ArticleRepository   articleRepository;
+    private final UserRepository      userRepository;
     private final NotificationService notificationService;
 
     @Override
@@ -208,7 +208,7 @@ public class ArticleServiceImpl implements ArticleService {
                                             saved.getId().longValue(),
                                             "文章审核结果",
                                             buildArticleModerationMessage(status)
-                                    );
+                                                                                    );
                                     return saved;
                                 });
     }
@@ -262,7 +262,8 @@ public class ArticleServiceImpl implements ArticleService {
         }
         try {
             Pattern.compile(pattern);
-        } catch (PatternSyntaxException exception) {
+        }
+        catch (PatternSyntaxException exception) {
             throw new IllegalArgumentException("invalid regex pattern");
         }
     }

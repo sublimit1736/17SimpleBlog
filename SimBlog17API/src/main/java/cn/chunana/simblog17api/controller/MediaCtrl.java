@@ -51,14 +51,14 @@ public class MediaCtrl {
     @Operation(summary = "访问图片文件", description = "根据文件名返回图片内容")
     public ResponseEntity<?> getFile(@PathVariable String fileName) {
         try {
-            Path root = Path.of(storagePath).toAbsolutePath().normalize();
+            Path root   = Path.of(storagePath).toAbsolutePath().normalize();
             Path target = root.resolve(fileName).normalize();
             if (!target.startsWith(root) || !Files.exists(target)) {
                 return ResponseEntity.notFound().build();
             }
 
-            UrlResource resource = new UrlResource(target.toUri());
-            String contentType = Files.probeContentType(target);
+            UrlResource resource    = new UrlResource(target.toUri());
+            String      contentType = Files.probeContentType(target);
             if (contentType == null) {
                 contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
             }
@@ -66,7 +66,8 @@ public class MediaCtrl {
             return ResponseEntity.ok()
                                  .contentType(MediaType.parseMediaType(contentType))
                                  .body(resource);
-        } catch (IOException exception) {
+        }
+        catch (IOException exception) {
             return ResponseEntity.internalServerError().build();
         }
     }

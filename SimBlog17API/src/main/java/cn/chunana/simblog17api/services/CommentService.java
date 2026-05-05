@@ -12,7 +12,9 @@ public interface CommentService {
 
     Comment createComment(CommentRequest request, Long authorId);
 
-    /** 删除评论：拥有者或管理员可删除，否则返回空。 */
+    /**
+     * 删除评论：拥有者或管理员可删除，否则返回空。
+     */
     Optional<Comment> deleteComment(Long commentId, Long currentUserId, boolean isAdmin);
 
     Optional<Comment> moderateCommentStatus(Long commentId, Integer status);

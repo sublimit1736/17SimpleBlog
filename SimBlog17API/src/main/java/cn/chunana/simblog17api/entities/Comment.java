@@ -33,7 +33,9 @@ public class Comment {
     @Schema(description = "评论作者用户 ID")
     private Long authorId;
 
-    /** null 表示顶层评论；非 null 表示对某条评论的回复 */
+    /**
+     * null 表示顶层评论；非 null 表示对某条评论的回复
+     */
     @Schema(description = "父评论 ID，null 为顶层评论")
     private Long parentCommentId;
 

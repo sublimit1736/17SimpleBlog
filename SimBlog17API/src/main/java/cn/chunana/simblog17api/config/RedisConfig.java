@@ -41,7 +41,7 @@ public class RedisConfig {
                 LaissezFaireSubTypeValidator.instance,
                 ObjectMapper.DefaultTyping.NON_FINAL,
                 JsonTypeInfo.As.PROPERTY
-        );
+                                    );
         return mapper;
     }
 
@@ -92,38 +92,38 @@ public class RedisConfig {
         Jackson2JsonRedisSerializer<Object> jsonSer = jsonSerializer(redisObjectMapper);
 
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeKeysWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(new StringRedisSerializer()))
-                .serializeValuesWith(RedisSerializationContext.SerializationPair
-                        .fromSerializer(jsonSer))
-                .disableCachingNullValues();
+                                                                       .serializeKeysWith(RedisSerializationContext.SerializationPair
+                                                                                                  .fromSerializer(new StringRedisSerializer()))
+                                                                       .serializeValuesWith(RedisSerializationContext.SerializationPair
+                                                                                                    .fromSerializer(jsonSer))
+                                                                       .disableCachingNullValues();
 
         Map<String, RedisCacheConfiguration> cacheConfigs = new HashMap<>();
 
         // 最新文章 — 内容更新较快，较短 TTL
         cacheConfigs.put(CacheNames.HOME_LATEST,
-                defaultConfig.entryTtl(CacheTtls.HOME_LATEST));
+                         defaultConfig.entryTtl(CacheTtls.HOME_LATEST));
 
         // 热门文章 — 浏览量变化不需要实时，稍长 TTL
         cacheConfigs.put(CacheNames.HOME_HOT,
-                defaultConfig.entryTtl(CacheTtls.HOME_HOT));
+                         defaultConfig.entryTtl(CacheTtls.HOME_HOT));
 
         // 站点统计
         cacheConfigs.put(CacheNames.HOME_STATS,
-                defaultConfig.entryTtl(CacheTtls.HOME_STATS));
+                         defaultConfig.entryTtl(CacheTtls.HOME_STATS));
 
         // 热门标签 — 变化最慢
         cacheConfigs.put(CacheNames.HOME_HOT_TAGS,
-                defaultConfig.entryTtl(CacheTtls.HOME_HOT_TAGS));
+                         defaultConfig.entryTtl(CacheTtls.HOME_HOT_TAGS));
 
         // 最新评论 — 更新较快
         cacheConfigs.put(CacheNames.HOME_RECENT_COMMENTS,
-                defaultConfig.entryTtl(CacheTtls.HOME_RECENT_COMMENTS));
+                         defaultConfig.entryTtl(CacheTtls.HOME_RECENT_COMMENTS));
 
         return RedisCacheManager.builder(connectionFactory)
-                .cacheDefaults(defaultConfig.entryTtl(CacheTtls.DEFAULT))
-                .withInitialCacheConfigurations(cacheConfigs)
-                .build();
+                                .cacheDefaults(defaultConfig.entryTtl(CacheTtls.DEFAULT))
+                                .withInitialCacheConfigurations(cacheConfigs)
+                                .build();
     }
 }
 

@@ -15,6 +15,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     long countByStatus(int status);
 
-    /** 全站最新评论（按创建时间倒序） */
+    /**
+     * 全站最新评论（按创建时间倒序）
+     */
     Page<Comment> findByStatusOrderByCreateTimeDesc(Integer status, Pageable pageable);
 }

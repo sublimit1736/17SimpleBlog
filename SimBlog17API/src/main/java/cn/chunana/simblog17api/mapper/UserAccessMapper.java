@@ -19,7 +19,9 @@ public final class UserAccessMapper {
                    .build();
     }
 
-    /** 登录/刷新时使用，携带 access + refresh token */
+    /**
+     * 登录/刷新时使用，携带 access + refresh token
+     */
     public static UserAccessResponse toUserAccessResponse(User user, String accessToken, String refreshToken) {
         return UserAccessResponse.builder()
                                  .id(user.getId())
@@ -36,7 +38,9 @@ public final class UserAccessMapper {
         return toUserAccessResponse(user, accessToken, null);
     }
 
-    /** 注册或不需要 token 时使用 */
+    /**
+     * 注册或不需要 token 时使用
+     */
     public static UserAccessResponse toUserAccessResponse(User user) {
         return toUserAccessResponse(user, null, null);
     }

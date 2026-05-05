@@ -23,12 +23,12 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final CommentRepository commentRepository;
+    private final CommentRepository   commentRepository;
     private final NotificationService notificationService;
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.HOME_STATS,           allEntries = true),
+            @CacheEvict(value = CacheNames.HOME_STATS, allEntries = true),
             @CacheEvict(value = CacheNames.HOME_RECENT_COMMENTS, allEntries = true)
     })
     public Comment createComment(CommentRequest request, Long authorId) {
@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.HOME_STATS,           allEntries = true),
+            @CacheEvict(value = CacheNames.HOME_STATS, allEntries = true),
             @CacheEvict(value = CacheNames.HOME_RECENT_COMMENTS, allEntries = true)
     })
     public Optional<Comment> deleteComment(Long commentId, Long currentUserId, boolean isAdmin) {
@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
                                                 saved.getId(),
                                                 "评论审核结果",
                                                 "你的评论未通过审核（已删除）"
-                                        );
+                                                                                        );
                                     }
                                     return saved;
                                 });
@@ -66,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Caching(evict = {
-            @CacheEvict(value = CacheNames.HOME_STATS,           allEntries = true),
+            @CacheEvict(value = CacheNames.HOME_STATS, allEntries = true),
             @CacheEvict(value = CacheNames.HOME_RECENT_COMMENTS, allEntries = true)
     })
     public Optional<Comment> moderateCommentStatus(Long commentId, Integer status) {
@@ -86,15 +86,16 @@ public class CommentServiceImpl implements CommentService {
                                                 saved.getId(),
                                                 "评论审核结果",
                                                 "你的评论已审核通过"
-                                        );
-                                    } else if (status == Comment.STATUS_REJECTED) {
+                                                                                        );
+                                    }
+                                    else if (status == Comment.STATUS_REJECTED) {
                                         notificationService.createModerationNotification(
                                                 saved.getAuthorId(),
                                                 "COMMENT",
                                                 saved.getId(),
                                                 "评论审核结果",
                                                 "你的评论未通过审核"
-                                        );
+                                                                                        );
                                     }
                                     return saved;
                                 });

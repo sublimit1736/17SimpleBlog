@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuthStore } from '../../store/auth';
-import { useUIStore } from '../../store/ui';
-import { authApi } from '../../api/auth';
-import { notificationsApi } from '../../api/notifications';
+import React, {useEffect, useRef, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import {useAuthStore} from '../../store/auth';
+import {useUIStore} from '../../store/ui';
+import {authApi} from '../../api/auth';
+import {notificationsApi} from '../../api/notifications';
 import Avatar from '../ui/Avatar';
-import { useToast } from '../ui/toastContext';
+import {useToast} from '../ui/toastContext';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {

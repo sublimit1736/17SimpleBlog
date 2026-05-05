@@ -108,13 +108,13 @@
 
 ### 2.7 错误处理速查表
 
-| `statusCode` | 含义 | 常见触发场景 | 前端处理建议 |
-|---|---|---|---|
-| `2` | INVALID_REQUEST | 参数校验失败、请求体格式不合法 | 直接提示用户修正输入 |
-| `4` | ACCESS_DENIED | 已登录但无权限（如非管理员操作管理接口） | 提示无权限并回退上一页 |
-| `5` | UNAUTHORIZED | 未登录、token 缺失/失效/被吊销 | 跳转登录页并清理本地 token |
-| `6` | TOO_MANY_REQUESTS | 登录/刷新频率过高触发限流 | 提示稍后重试并做按钮节流 |
-| `3/2002/3001/4001` | 资源不存在 | 用户/文章/评论不存在 | 展示空态或 404 页面 |
+| `statusCode`       | 含义                | 常见触发场景               | 前端处理建议           |
+|--------------------|-------------------|----------------------|------------------|
+| `2`                | INVALID_REQUEST   | 参数校验失败、请求体格式不合法      | 直接提示用户修正输入       |
+| `4`                | ACCESS_DENIED     | 已登录但无权限（如非管理员操作管理接口） | 提示无权限并回退上一页      |
+| `5`                | UNAUTHORIZED      | 未登录、token 缺失/失效/被吊销  | 跳转登录页并清理本地 token |
+| `6`                | TOO_MANY_REQUESTS | 登录/刷新频率过高触发限流        | 提示稍后重试并做按钮节流     |
+| `3/2002/3001/4001` | 资源不存在             | 用户/文章/评论不存在          | 展示空态或 404 页面     |
 
 > 说明：HTTP 层可能同时返回 `401/403/429`，业务状态请以响应体中的 `statusCode` 为准。
 
@@ -293,8 +293,8 @@ curl -X POST "http://localhost:8080/api/user/auth/refresh" \
 - `POST /logout`
 - 鉴权：需要登录
 - 可选请求头：
-  - `Authorization: Bearer <accessToken>`
-  - `X-Refresh-Token: <refreshToken>`
+    - `Authorization: Bearer <accessToken>`
+    - `X-Refresh-Token: <refreshToken>`
 - 返回：`true`
 - 备注：服务端会将传入 token 加入吊销列表
 
@@ -569,7 +569,7 @@ curl -X POST "http://localhost:8080/api/user/auth/refresh" \
 
 - `GET /articles/pending`：待审核文章列表
 - `PUT /articles/{id}/status`：调整文章状态
-  - 请求体：`AdminArticleStatusRequest`
+    - 请求体：`AdminArticleStatusRequest`
 
 ```json
 { "status": 1 }
@@ -580,7 +580,7 @@ curl -X POST "http://localhost:8080/api/user/auth/refresh" \
 - `GET /comments?status=0`：评论列表
 - `DELETE /comments/{id}`：管理员删除评论
 - `PUT /comments/{id}/status`：管理员更新评论审核状态
-  - 请求体：`AdminCommentStatusRequest`
+    - 请求体：`AdminCommentStatusRequest`
 
 ```json
 { "status": 1 }

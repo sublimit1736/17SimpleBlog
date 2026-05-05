@@ -23,7 +23,7 @@ tags:
 paths:
   /api/user/auth/login:
     post:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Login
       requestBody:
         required: true
@@ -45,7 +45,7 @@ paths:
 
   /api/user/auth/register:
     post:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Register
       requestBody:
         required: true
@@ -65,7 +65,7 @@ paths:
 
   /api/user/auth/profile/{uid}:
     get:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Get user profile
       parameters:
         - $ref: '#/components/parameters/UidPath'
@@ -77,10 +77,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiStatusResponseUserAccessResponse'
     put:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Update username
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/UidPath'
       requestBody:
@@ -105,10 +105,10 @@ paths:
 
   /api/user/auth/profile/{uid}/avatar:
     put:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Upload user avatar
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/UidPath'
       requestBody:
@@ -117,7 +117,7 @@ paths:
           multipart/form-data:
             schema:
               type: object
-              required: [file]
+              required: [ file ]
               properties:
                 file:
                   type: string
@@ -136,10 +136,10 @@ paths:
 
   /api/user/auth/password:
     put:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Change password
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -160,7 +160,7 @@ paths:
 
   /api/user/auth/refresh:
     post:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Refresh tokens
       parameters:
         - $ref: '#/components/parameters/RefreshTokenHeader'
@@ -178,10 +178,10 @@ paths:
 
   /api/user/auth/logout:
     post:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Logout and revoke tokens
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/AuthorizationHeader'
         - $ref: '#/components/parameters/RefreshTokenHeaderOptional'
@@ -197,7 +197,7 @@ paths:
 
   /api/user/auth/search/by_username:
     get:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Search users by username (plain text)
       parameters:
         - in: query
@@ -218,7 +218,7 @@ paths:
 
   /api/user/auth/search/regex/by_username:
     get:
-      tags: [Auth]
+      tags: [ Auth ]
       summary: Search users by username (regex)
       parameters:
         - in: query
@@ -239,10 +239,10 @@ paths:
 
   /api/articles/new:
     post:
-      tags: [Article]
+      tags: [ Article ]
       summary: Create article
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -263,7 +263,7 @@ paths:
 
   /api/articles/view/{id}:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: View article detail
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
@@ -277,7 +277,7 @@ paths:
 
   /api/articles/all:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: List published articles
       parameters:
         - $ref: '#/components/parameters/Page'
@@ -293,7 +293,7 @@ paths:
 
   /api/articles/by_author/{id}:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: List articles by author
       parameters:
         - in: path
@@ -315,10 +315,10 @@ paths:
 
   /api/articles/profile/{uid}/drafts:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: List drafts by user
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/UidPath'
         - $ref: '#/components/parameters/Page'
@@ -338,7 +338,7 @@ paths:
 
   /api/articles/search/by_title:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: Search articles by title (plain text)
       parameters:
         - in: query
@@ -359,7 +359,7 @@ paths:
 
   /api/articles/search/by_tags:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: Search articles by tags (plain text)
       parameters:
         - in: query
@@ -380,7 +380,7 @@ paths:
 
   /api/articles/search/regex/by_title:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: Search articles by title (regex)
       parameters:
         - in: query
@@ -401,7 +401,7 @@ paths:
 
   /api/articles/search/regex/by_tags:
     get:
-      tags: [Article]
+      tags: [ Article ]
       summary: Search articles by tags (regex)
       parameters:
         - in: query
@@ -422,10 +422,10 @@ paths:
 
   /api/articles/draft:
     post:
-      tags: [Article]
+      tags: [ Article ]
       summary: Create draft
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -446,10 +446,10 @@ paths:
 
   /api/articles/draft/{id}:
     put:
-      tags: [Article]
+      tags: [ Article ]
       summary: Update draft
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       requestBody:
@@ -474,10 +474,10 @@ paths:
 
   /api/articles/draft/{id}/publish:
     post:
-      tags: [Article]
+      tags: [ Article ]
       summary: Publish draft
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -494,10 +494,10 @@ paths:
 
   /api/articles/update/{id}:
     put:
-      tags: [Article]
+      tags: [ Article ]
       summary: Update article
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       requestBody:
@@ -522,10 +522,10 @@ paths:
 
   /api/articles/hide/{id}:
     put:
-      tags: [Article]
+      tags: [ Article ]
       summary: Hide article
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -542,10 +542,10 @@ paths:
 
   /api/articles/publish/{id}:
     put:
-      tags: [Article]
+      tags: [ Article ]
       summary: Publish article
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -562,10 +562,10 @@ paths:
 
   /api/articles/delete/{id}:
     delete:
-      tags: [Article]
+      tags: [ Article ]
       summary: Delete article
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -582,10 +582,10 @@ paths:
 
   /api/comments:
     post:
-      tags: [Comment]
+      tags: [ Comment ]
       summary: Create comment or reply
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
@@ -606,7 +606,7 @@ paths:
 
   /api/comments/by_article/{articleId}:
     get:
-      tags: [Comment]
+      tags: [ Comment ]
       summary: List comments by article
       parameters:
         - in: path
@@ -628,10 +628,10 @@ paths:
 
   /api/comments/{id}:
     delete:
-      tags: [Comment]
+      tags: [ Comment ]
       summary: Delete comment
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -653,17 +653,17 @@ paths:
 
   /api/media/upload:
     post:
-      tags: [Media]
+      tags: [ Media ]
       summary: Upload image for article content
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
-              required: [file]
+              required: [ file ]
               properties:
                 file:
                   type: string
@@ -680,7 +680,7 @@ paths:
 
   /api/media/files/{fileName}:
     get:
-      tags: [Media]
+      tags: [ Media ]
       summary: Read uploaded image file
       parameters:
         - in: path
@@ -694,10 +694,10 @@ paths:
 
   /api/notifications:
     get:
-      tags: [Notification]
+      tags: [ Notification ]
       summary: List my notifications
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Size'
@@ -714,10 +714,10 @@ paths:
 
   /api/notifications/unread-count:
     get:
-      tags: [Notification]
+      tags: [ Notification ]
       summary: Get unread notification count
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -730,10 +730,10 @@ paths:
 
   /api/notifications/{id}/read:
     put:
-      tags: [Notification]
+      tags: [ Notification ]
       summary: Mark notification as read
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -753,10 +753,10 @@ paths:
 
   /api/notifications/read-all:
     put:
-      tags: [Notification]
+      tags: [ Notification ]
       summary: Mark all notifications as read
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       responses:
         '200':
           description: OK
@@ -769,10 +769,10 @@ paths:
 
   /api/articles/{id}/like:
     post:
-      tags: [Interaction]
+      tags: [ Interaction ]
       summary: Toggle like
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -787,10 +787,10 @@ paths:
 
   /api/articles/{id}/favorite:
     post:
-      tags: [Interaction]
+      tags: [ Interaction ]
       summary: Toggle favorite
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       responses:
@@ -805,7 +805,7 @@ paths:
 
   /api/articles/{id}/interactions:
     get:
-      tags: [Interaction]
+      tags: [ Interaction ]
       summary: Get interaction status
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
@@ -819,7 +819,7 @@ paths:
 
   /api/articles/profile/{uid}/likes:
     get:
-      tags: [Interaction]
+      tags: [ Interaction ]
       summary: List user's liked articles
       parameters:
         - $ref: '#/components/parameters/UidPath'
@@ -836,7 +836,7 @@ paths:
 
   /api/articles/profile/{uid}/favorites:
     get:
-      tags: [Interaction]
+      tags: [ Interaction ]
       summary: List user's favorited articles
       parameters:
         - $ref: '#/components/parameters/UidPath'
@@ -853,7 +853,7 @@ paths:
 
   /api/home/latest:
     get:
-      tags: [Home]
+      tags: [ Home ]
       summary: Latest published articles
       parameters:
         - $ref: '#/components/parameters/Page'
@@ -869,7 +869,7 @@ paths:
 
   /api/home/hot:
     get:
-      tags: [Home]
+      tags: [ Home ]
       summary: Hot articles in N days
       parameters:
         - in: query
@@ -893,7 +893,7 @@ paths:
 
   /api/home/stats:
     get:
-      tags: [Home]
+      tags: [ Home ]
       summary: Site stats
       responses:
         '200':
@@ -905,7 +905,7 @@ paths:
 
   /api/home/hot-tags:
     get:
-      tags: [Home]
+      tags: [ Home ]
       summary: Hot tags
       parameters:
         - in: query
@@ -926,7 +926,7 @@ paths:
 
   /api/home/recent-comments:
     get:
-      tags: [Home]
+      tags: [ Home ]
       summary: Recent comments
       parameters:
         - $ref: '#/components/parameters/Page'
@@ -942,10 +942,10 @@ paths:
 
   /api/admin/users/{userId}/promote:
     put:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Promote user to admin
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: userId
@@ -967,10 +967,10 @@ paths:
 
   /api/admin/users/{userId}/demote:
     put:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Demote admin to user
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: userId
@@ -992,10 +992,10 @@ paths:
 
   /api/admin/articles/pending:
     get:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: List pending articles
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Size'
@@ -1014,10 +1014,10 @@ paths:
 
   /api/admin/articles/{id}/status:
     put:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Update article status
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - $ref: '#/components/parameters/ArticleIdPath'
       requestBody:
@@ -1042,10 +1042,10 @@ paths:
 
   /api/admin/comments:
     get:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: List comments by status
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: query
           name: status
@@ -1070,10 +1070,10 @@ paths:
 
   /api/admin/comments/{id}:
     delete:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Delete comment as admin
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -1095,10 +1095,10 @@ paths:
 
   /api/admin/comments/{id}/status:
     put:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Update comment moderation status
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: path
           name: id
@@ -1128,10 +1128,10 @@ paths:
 
   /api/admin/media/cleanup:
     post:
-      tags: [Admin]
+      tags: [ Admin ]
       summary: Cleanup orphan media files
       security:
-        - bearerAuth: []
+        - bearerAuth: [ ]
       parameters:
         - in: query
           name: olderThanDays
@@ -1154,7 +1154,7 @@ paths:
 
   /api/public/ping:
     get:
-      tags: [Probe]
+      tags: [ Probe ]
       summary: Public probe
       responses:
         '200':
@@ -1162,7 +1162,7 @@ paths:
 
   /api/private/ping:
     get:
-      tags: [Probe]
+      tags: [ Probe ]
       summary: Private probe
       responses:
         '200':
@@ -1283,15 +1283,15 @@ components:
   schemas:
     UserRole:
       type: string
-      enum: [USER, ADMIN]
+      enum: [ USER, ADMIN ]
 
     ArticleContentType:
       type: string
-      enum: [PLAIN_TEXT, MARKDOWN, HTML]
+      enum: [ PLAIN_TEXT, MARKDOWN, HTML ]
 
     UserAccessRequest:
       type: object
-      required: [username, password]
+      required: [ username, password ]
       properties:
         username:
           type: string
@@ -1303,7 +1303,7 @@ components:
 
     UpdateUsernameRequest:
       type: object
-      required: [username]
+      required: [ username ]
       properties:
         username:
           type: string
@@ -1312,7 +1312,7 @@ components:
 
     ChangePasswordRequest:
       type: object
-      required: [oldPassword, newPassword]
+      required: [ oldPassword, newPassword ]
       properties:
         oldPassword:
           type: string
@@ -1354,7 +1354,7 @@ components:
 
     ArticleRequest:
       type: object
-      required: [title, content, contentType, authorId]
+      required: [ title, content, contentType, authorId ]
       properties:
         title:
           type: string
@@ -1430,7 +1430,7 @@ components:
 
     CommentRequest:
       type: object
-      required: [articleId, content]
+      required: [ articleId, content ]
       properties:
         articleId:
           type: integer
@@ -1570,7 +1570,7 @@ components:
 
     AdminArticleStatusRequest:
       type: object
-      required: [status]
+      required: [ status ]
       properties:
         status:
           type: integer
@@ -1579,7 +1579,7 @@ components:
 
     AdminCommentStatusRequest:
       type: object
-      required: [status]
+      required: [ status ]
       example:
         status: 1
       properties:

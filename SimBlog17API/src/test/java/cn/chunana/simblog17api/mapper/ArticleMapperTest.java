@@ -7,6 +7,7 @@ import cn.chunana.simblog17api.entities.Article;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -22,7 +23,7 @@ class ArticleMapperTest {
                                               .content("hello world")
                                               .contentType(Article.CONTENT_TYPE_PLAIN_TEXT)
                                               .authorId(1001L)
-                                              .tags("java,spring")
+                                              .tags(List.of("java", "spring"))
                                               .build();
 
         Article article = ArticleMapper.toNewArticle(request);
@@ -50,7 +51,7 @@ class ArticleMapperTest {
                                               .content("intro<p>full body</p>")
                                               .contentType(Article.CONTENT_TYPE_HTML)
                                               .authorId(1001L)
-                                              .tags("new")
+                                              .tags(List.of("new"))
                                               .build();
 
         ArticleMapper.applyUpdatableFields(article, request);
@@ -70,7 +71,7 @@ class ArticleMapperTest {
                                               .content("<p>ok</p><img src='https://cdn.example.com/a.png'>")
                                               .contentType(Article.CONTENT_TYPE_HTML)
                                               .authorId(1001L)
-                                              .tags("security")
+                                              .tags(List.of("security"))
                                               .build();
 
         Article article = ArticleMapper.toNewArticle(request);
@@ -87,7 +88,7 @@ class ArticleMapperTest {
                                               .content("<p>ok</p><script>alert('x')</script>")
                                               .contentType(Article.CONTENT_TYPE_HTML)
                                               .authorId(1001L)
-                                              .tags("security")
+                                              .tags(List.of("security"))
                                               .build();
 
         assertThrows(IllegalArgumentException.class, () -> ArticleMapper.toNewArticle(request));

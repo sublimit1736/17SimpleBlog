@@ -98,7 +98,7 @@ class ArticleCtrlTest {
                                                    "content": "body",
                                                    "contentType": "MARKDOWN",
                                                    "authorId": 1001,
-                                                   "tags": "java"
+                                                   "tags": ["java"]
                                                  }
                                                  """))
                .andExpect(status().isOk())

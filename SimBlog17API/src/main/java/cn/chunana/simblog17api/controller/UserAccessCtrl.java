@@ -5,7 +5,6 @@ import cn.chunana.simblog17api.dto.request.ChangePasswordRequest;
 import cn.chunana.simblog17api.dto.request.UpdateUsernameRequest;
 import cn.chunana.simblog17api.dto.request.UserAccessRequest;
 import cn.chunana.simblog17api.dto.response.ApiStatusResponse;
-import cn.chunana.simblog17api.dto.response.MediaUploadResponse;
 import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.dto.response.UserAccessResponse;
 import cn.chunana.simblog17api.mapper.UserAccessMapper;
@@ -256,7 +255,7 @@ public class UserAccessCtrl {
     @PutMapping(value = "/profile/{uid}/avatar", consumes = "multipart/form-data")
     @Operation(summary = "上传头像", description = "上传头像图片并更新指定用户头像，仅本人或管理员允许")
     @PreAuthorize("isAuthenticated()")
-    public ApiStatusResponse<MediaUploadResponse> uploadAvatar(
+    public ApiStatusResponse<UserAccessResponse> uploadAvatar(
             @PathVariable Long uid,
             @RequestParam("file") MultipartFile file,
             Authentication authentication) {
@@ -271,7 +270,10 @@ public class UserAccessCtrl {
             return ApiStatusResponse.fail(Status.ACCESS_DENIED);
         }
 
-        return ApiStatusResponse.ok(mediaService.uploadAvatar(file, uid, currentUserId, isAdmin));
+        mediaService.uploadAvatar(file, uid, currentUserId, isAdmin);
+        return userAccessService.findById(uid)
+                                .map(user -> ApiStatusResponse.ok(UserAccessMapper.toUserAccessResponse(user)))
+                                .orElseGet(() -> ApiStatusResponse.fail(Status.USER_NOT_FOUND));
     }
 
     private boolean isAuthRateLimited(HttpServletRequest request,

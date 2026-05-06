@@ -57,8 +57,8 @@ const ArticleDetailPage: React.FC = () => {
             const res = await articlesApi.getInteractions(articleId);
             if (res.data.statusCode === 0) {
                 const d = res.data.data;
-                setLiked(d.liked);
-                setFavorited(d.favorited);
+                setLiked(d.likedByCurrentUser);
+                setFavorited(d.favoritedByCurrentUser);
                 setLikeCount(d.likeCount);
                 setFavoriteCount(d.favoriteCount);
             }
@@ -85,8 +85,8 @@ const ArticleDetailPage: React.FC = () => {
 
     useEffect(() => {
         if (article) {
-            setLikeCount(article.likeCount);
-            setFavoriteCount(article.favoriteCount);
+            setLikeCount(0);
+            setFavoriteCount(0);
         }
     }, [article]);
 
@@ -203,7 +203,7 @@ const ArticleDetailPage: React.FC = () => {
 
     const timeStr = (() => {
         try {
-            return format(new Date(article.createdAt), 'yyyy年MM月dd日 HH:mm');
+            return format(new Date(article.publishedTime), 'yyyy年MM月dd日 HH:mm');
         } catch {
             return '';
         }
@@ -228,7 +228,7 @@ const ArticleDetailPage: React.FC = () => {
     const CommentItem = ({comment, depth = 0}: { comment: Comment; depth?: number }) => {
         const timeAgo = (() => {
             try {
-                return formatDistanceToNow(new Date(comment.createdAt), {addSuffix: true, locale: zhCN});
+                return formatDistanceToNow(new Date(comment.createTime), {addSuffix: true, locale: zhCN});
             } catch {
                 return '';
             }
@@ -278,9 +278,9 @@ const ArticleDetailPage: React.FC = () => {
             <div className={styles.articleHero}>
                 <div className={styles.heroOverlay} />
                 <div className={styles.heroContent}>
-                    {article.tags && article.tags.length > 0 && (
+                    {article.tags && (
                         <div className={styles.heroTags}>
-                            {article.tags.map((tag) => (
+                            {article.tags.split(',').map((t) => t.trim()).filter(Boolean).map((tag) => (
                                 <Link
                                     key={tag}
                                     to={`/search?type=articles&q=${encodeURIComponent(tag)}`}
@@ -301,8 +301,6 @@ const ArticleDetailPage: React.FC = () => {
                         <span>📅 {timeStr}</span>
                         <span className={styles.heroMetaSep}>·</span>
                         <span>👁 {article.viewCount}</span>
-                        <span className={styles.heroMetaSep}>·</span>
-                        <span>💬 {article.commentCount}</span>
                     </div>
                     {canEdit && (
                         <div className={styles.heroActions}>
@@ -327,7 +325,7 @@ const ArticleDetailPage: React.FC = () => {
                 <article className={styles.article}>
                     {/* Content */}
                     <div className={styles.content}>
-                        <MarkdownRenderer content={article.content} contentType={article.contentType}/>
+                        <MarkdownRenderer content={article.content ?? ''} contentType={article.contentType}/>
                     </div>
 
                     {/* Interaction bar */}

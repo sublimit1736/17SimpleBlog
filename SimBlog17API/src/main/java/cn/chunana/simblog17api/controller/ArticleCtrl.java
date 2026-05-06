@@ -7,7 +7,9 @@ import cn.chunana.simblog17api.dto.response.ArticleMetaResponse;
 import cn.chunana.simblog17api.dto.response.ArticleResponse;
 import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.entities.Article;
+import cn.chunana.simblog17api.entities.User;
 import cn.chunana.simblog17api.mapper.ArticleMapper;
+import cn.chunana.simblog17api.repository.UserRepository;
 import cn.chunana.simblog17api.services.ArticleService;
 import cn.chunana.simblog17api.utils.SecurityUtils;
 import jakarta.validation.Valid;
@@ -29,6 +31,7 @@ import java.util.Optional;
 @Slf4j
 public class ArticleCtrl {
     private final ArticleService articleService;
+    private final UserRepository userRepository;
 
     @PostMapping("/new")
     @PreAuthorize("isAuthenticated()")
@@ -41,7 +44,7 @@ public class ArticleCtrl {
 
         Article article = articleService.createArticle(withAuthorId(articleRequest, currentUserId));
         log.info("article.create id={} authorId={}", article.getId(), currentUserId);
-        return ApiStatusResponse.ok(ArticleMapper.toArticleResponse(article));
+        return ApiStatusResponse.ok(enrichArticleResponse(article));
     }
 
     @GetMapping("/view/{id}")
@@ -49,7 +52,7 @@ public class ArticleCtrl {
         Optional<Article> queryArticle = articleService.getArticleById(id);
         return queryArticle.map(article -> {
             articleService.increaseViewCountsAsync(id);
-            return ApiStatusResponse.ok(ArticleMapper.toArticleResponse(article));
+            return ApiStatusResponse.ok(enrichArticleResponse(article));
         }).orElseGet(() -> ApiStatusResponse.fail(Status.ARTICLE_NOT_FOUND));
     }
 
@@ -113,7 +116,7 @@ public class ArticleCtrl {
 
         Article article = articleService.createDraft(withAuthorId(articleRequest, currentUserId));
         log.info("article.draft.create id={} authorId={}", article.getId(), currentUserId);
-        return ApiStatusResponse.ok(ArticleMapper.toArticleResponse(article));
+        return ApiStatusResponse.ok(enrichArticleResponse(article));
     }
 
     @PutMapping("/draft/{id}")
@@ -137,7 +140,7 @@ public class ArticleCtrl {
         }
 
         return articleService.updateDraft(id, articleRequest)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.draft.update id={} operatorUid={}", id, currentUserId);
                                  return ApiStatusResponse.ok(articleResponse);
@@ -165,7 +168,7 @@ public class ArticleCtrl {
         }
 
         return articleService.publishDraft(id)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.draft.publish id={} operatorUid={}", id, currentUserId);
                                  return ApiStatusResponse.ok(articleResponse);
@@ -178,7 +181,7 @@ public class ArticleCtrl {
     public ApiStatusResponse<ArticleResponse> updateArticle(@PathVariable Long id,
                                                             @Valid @RequestBody ArticleRequest articleRequest) {
         return articleService.updateArticle(id, articleRequest)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.update id={}", id);
                                  return ApiStatusResponse.ok(articleResponse);
@@ -190,7 +193,7 @@ public class ArticleCtrl {
     @PreAuthorize("isAuthenticated()")
     public ApiStatusResponse<ArticleResponse> hideArticle(@PathVariable Long id) {
         return articleService.hideArticle(id)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.hide id={}", id);
                                  return ApiStatusResponse.ok(articleResponse);
@@ -202,7 +205,7 @@ public class ArticleCtrl {
     @PreAuthorize("isAuthenticated()")
     public ApiStatusResponse<ArticleResponse> publishArticle(@PathVariable Long id) {
         return articleService.publishArticle(id)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.publish id={}", id);
                                  return ApiStatusResponse.ok(articleResponse);
@@ -240,12 +243,21 @@ public class ArticleCtrl {
         }
 
         return articleService.deleteArticle(id)
-                             .map(ArticleMapper::toArticleResponse)
+                             .map(this::enrichArticleResponse)
                              .map(articleResponse -> {
                                  log.info("article.delete id={} operatorUid={}", id, SecurityUtils.getCurrentUserId(authentication));
                                  return ApiStatusResponse.ok(articleResponse);
                              })
                              .orElseGet(() -> ApiStatusResponse.fail(Status.ARTICLE_NOT_FOUND));
+    }
+
+    private ArticleResponse enrichArticleResponse(Article article) {
+        User author = article.getAuthorId() != null
+                ? userRepository.findById(article.getAuthorId()).orElse(null)
+                : null;
+        return ArticleMapper.toArticleResponse(article,
+                author != null ? author.getUsername() : null,
+                author != null ? author.getAvatarUrl() : null);
     }
 
     private ArticleRequest withAuthorId(ArticleRequest original, Long authorId) {

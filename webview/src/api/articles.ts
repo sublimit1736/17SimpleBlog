@@ -1,5 +1,5 @@
 import client from './client';
-import type {ApiResponse, Article, PageResponse} from '../types';
+import type {ApiResponse, Article, Interaction, PageResponse} from '../types';
 
 export const articlesApi = {
     getById: (id: number) =>
@@ -51,12 +51,7 @@ export const articlesApi = {
         client.post<ApiResponse<boolean>>(`/articles/${id}/favorite`),
 
     getInteractions: (id: number) =>
-        client.get<ApiResponse<{
-            likeCount: number;
-            favoriteCount: number;
-            liked: boolean;
-            favorited: boolean
-        }>>(`/articles/${id}/interactions`),
+        client.get<ApiResponse<Interaction>>(`/articles/${id}/interactions`),
 
     getLikedArticles: (uid: number, page = 0, size = 10) =>
         client.get<ApiResponse<PageResponse<Article>>>(`/articles/profile/${uid}/likes`, {params: {page, size}}),

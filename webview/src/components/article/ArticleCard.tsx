@@ -36,17 +36,28 @@ const COVER_GRADIENTS = [
 const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false, index = 0 }) => {
   const timeAgo = (() => {
     try {
-      return formatDistanceToNow(new Date(article.createdAt), { addSuffix: true, locale: zhCN });
+      return formatDistanceToNow(new Date(article.publishedTime), { addSuffix: true, locale: zhCN });
     } catch {
       return '';
     }
   })();
 
   const statusInfo = statusLabels[article.status];
-  // eslint-disable-next-line no-useless-escape
-  const excerpt = article.content.replace(/[#*`>\[\]!]/g, '').replace(/\n+/g, ' ').trim().substring(0, 150);
+
+  // Use preview if available, otherwise fall back to stripping content markdown
+  const excerpt = article.preview
+    || (article.content
+        // eslint-disable-next-line no-useless-escape
+        ? article.content.replace(/[#*`>\[\]!]/g, '').replace(/\n+/g, ' ').trim().substring(0, 150)
+        : '');
+
   const coverGradient = COVER_GRADIENTS[index % COVER_GRADIENTS.length];
   const imageRight = index % 2 !== 0;
+
+  // Parse tags from comma-separated string
+  const tagList = article.tags
+    ? article.tags.split(',').map((t) => t.trim()).filter(Boolean)
+    : [];
 
   return (
     <article className={`${styles.card} ${imageRight ? styles.imageRight : ''}`}>
@@ -80,13 +91,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false, 
 
         {excerpt && (
           <p className={styles.excerpt}>
-            {excerpt}{article.content.length > 150 ? '...' : ''}
+            {excerpt}{excerpt.length >= 150 ? '...' : ''}
           </p>
         )}
 
-        {article.tags && article.tags.length > 0 && (
+        {tagList.length > 0 && (
           <div className={styles.tags}>
-            {article.tags.slice(0, 4).map((tag) => (
+            {tagList.slice(0, 4).map((tag) => (
               <Tag key={tag} label={tag} linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`} />
             ))}
           </div>
@@ -95,9 +106,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false, 
         <div className={styles.footer}>
           <div className={styles.stats}>
             <span title="浏览">👁 {article.viewCount}</span>
-            <span title="点赞">👍 {article.likeCount}</span>
-            <span title="评论">💬 {article.commentCount}</span>
-            <span title="收藏">⭐ {article.favoriteCount}</span>
           </div>
           <Link to={`/article/${article.id}`} className={styles.readMore}>
             阅读全文 →

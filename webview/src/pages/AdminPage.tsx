@@ -155,7 +155,7 @@ const AdminPage: React.FC = () => {
                                     <div className={styles.rowInfo}>
                                         <Link to={`/article/${a.id}`} className={styles.articleTitle}>{a.title}</Link>
                                         <span
-                                            className={styles.meta}>by {a.authorName} · {new Date(a.createdAt).toLocaleDateString()}</span>
+                                            className={styles.meta}>by {a.authorName} · {new Date(a.publishedTime).toLocaleDateString()}</span>
                                     </div>
                                     <div className={styles.rowActions}>
                                         <Button size="sm" onClick={() => approveArticle(a.id)}>通过</Button>

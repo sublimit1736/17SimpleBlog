@@ -38,12 +38,12 @@ const BloggerCard: React.FC<BloggerCardProps> = ({
       {/* Stats row */}
       <div className={styles.stats}>
         <button className={styles.statItem} onClick={() => navigate('/articles')}>
-          <span className={styles.statNum}>{stats?.articleCount ?? '—'}</span>
+          <span className={styles.statNum}>{stats?.totalArticles ?? '—'}</span>
           <span className={styles.statLabel}>文章</span>
         </button>
         <div className={styles.divider} />
         <div className={styles.statItem}>
-          <span className={styles.statNum}>{stats?.commentCount ?? '—'}</span>
+          <span className={styles.statNum}>{stats?.totalComments ?? '—'}</span>
           <span className={styles.statLabel}>评论</span>
         </div>
         <div className={styles.divider} />

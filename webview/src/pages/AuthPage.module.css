@@ -4,6 +4,8 @@
     align-items: center;
     justify-content: center;
     padding: 40px 16px;
+    background: radial-gradient(ellipse at 60% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 30% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
 }
 
 .card {

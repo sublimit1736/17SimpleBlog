@@ -82,10 +82,15 @@ public class AdminCtrl {
             @Valid @RequestBody AdminArticleStatusRequest request) {
 
         return articleService.moderateArticleStatus(id, request.status())
-                             .map(ArticleMapper::toArticleMetaResponse)
-                             .map(articleMetaResponse -> {
+                             .map(article -> {
+                                 cn.chunana.simblog17api.entities.User author = article.getAuthorId() != null
+                                         ? userRepository.findById(article.getAuthorId()).orElse(null)
+                                         : null;
+                                 ArticleMetaResponse meta = ArticleMapper.toArticleMetaResponse(article,
+                                         author != null ? author.getUsername() : null,
+                                         author != null ? author.getAvatarUrl() : null);
                                  log.info("admin.article.status_update articleId={} status={}", id, request.status());
-                                 return ApiStatusResponse.ok(articleMetaResponse);
+                                 return ApiStatusResponse.ok(meta);
                              })
                              .orElseGet(() -> ApiStatusResponse.fail(Status.ARTICLE_NOT_FOUND));
     }
@@ -97,18 +102,23 @@ public class AdminCtrl {
             @PageableDefault(size = 20, sort = "createTime") Pageable pageable) {
 
         return ApiStatusResponse.ok(
-                PageResponse.from(commentRepository.findByStatusOrderByCreateTimeDesc(status, pageable)
-                                               .map(CommentMapper::toCommentResponse)));
+                CommentMapper.toCommentPageResponse(
+                        commentRepository.findByStatusOrderByCreateTimeDesc(status, pageable),
+                        userRepository));
     }
 
     @DeleteMapping("/comments/{id}")
     @Operation(summary = "管理员删除评论")
     public ApiStatusResponse<CommentResponse> deleteCommentAsAdmin(@PathVariable Long id) {
         return commentService.deleteComment(id, null, true)
-                             .map(CommentMapper::toCommentResponse)
-                             .map(commentResponse -> {
+                             .map(c -> {
+                                 cn.chunana.simblog17api.entities.User author = c.getAuthorId() != null
+                                         ? userRepository.findById(c.getAuthorId()).orElse(null)
+                                         : null;
                                  log.info("admin.comment.delete id={}", id);
-                                 return ApiStatusResponse.ok(commentResponse);
+                                 return ApiStatusResponse.ok(CommentMapper.toCommentResponse(c,
+                                         author != null ? author.getUsername() : null,
+                                         author != null ? author.getAvatarUrl() : null));
                              })
                              .orElseGet(() -> ApiStatusResponse.fail(Status.COMMENT_NOT_FOUND));
     }
@@ -120,10 +130,14 @@ public class AdminCtrl {
             @Valid @RequestBody AdminCommentStatusRequest request) {
 
         return commentService.moderateCommentStatus(id, request.status())
-                             .map(CommentMapper::toCommentResponse)
-                             .map(commentResponse -> {
+                             .map(c -> {
+                                 cn.chunana.simblog17api.entities.User author = c.getAuthorId() != null
+                                         ? userRepository.findById(c.getAuthorId()).orElse(null)
+                                         : null;
                                  log.info("admin.comment.status_update id={} status={}", id, request.status());
-                                 return ApiStatusResponse.ok(commentResponse);
+                                 return ApiStatusResponse.ok(CommentMapper.toCommentResponse(c,
+                                         author != null ? author.getUsername() : null,
+                                         author != null ? author.getAvatarUrl() : null));
                              })
                              .orElseGet(() -> ApiStatusResponse.fail(Status.COMMENT_NOT_FOUND));
     }

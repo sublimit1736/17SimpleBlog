@@ -1,37 +1,46 @@
 .heading {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 800;
     margin-bottom: 24px;
+    background: var(--color-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    display: inline-block;
 }
 
 .tabBar {
     display: flex;
-    border-bottom: 2px solid var(--color-border);
-    margin-bottom: 28px;
     gap: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    margin-bottom: 28px;
 }
 
 .tabBtn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
+    flex: 1;
+    padding: 9px 16px;
+    font-size: 0.875rem;
     font-weight: 500;
     background: none;
     border: none;
     cursor: pointer;
     color: var(--color-text-secondary);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    transition: color var(--transition), border-color var(--transition);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
 }
 
 .tabBtn:hover {
     color: var(--color-text);
+    background: var(--color-surface-hover);
 }
 
 .tabActive {
-    color: var(--color-primary) !important;
-    border-bottom-color: var(--color-primary) !important;
+    background: var(--color-gradient) !important;
+    color: #fff !important;
+    box-shadow: var(--shadow-sm);
 }
 
 .list {
@@ -49,6 +58,11 @@
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     flex-wrap: wrap;
+    transition: box-shadow var(--transition);
+}
+
+.row:hover {
+    box-shadow: var(--shadow-sm);
 }
 
 .rowInfo {
@@ -100,19 +114,28 @@
     display: flex;
     gap: 8px;
     margin-bottom: 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-full);
+    padding: 4px 4px 4px 16px;
+    transition: border-color var(--transition);
+}
+
+.userSearch:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .searchInput {
     flex: 1;
-    padding: 10px 14px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-    background: var(--color-surface);
+    padding: 8px 0;
+    border: none;
+    background: transparent;
     color: var(--color-text);
     font-size: 0.9rem;
+    outline: none;
 }
 
-.searchInput:focus {
-    outline: none;
-    border-color: var(--color-primary);
+.searchInput::placeholder {
+    color: var(--color-text-muted);
 }

@@ -155,33 +155,33 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleMetaResponse> getAllArticles(Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleMetaResponse));
+        return ArticleMapper.toMetaPageResponse(
+                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PUBLISHED, pageable),
+                userRepository);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleResponse> getArticlesByAuthorId(Long authorId, Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByAuthorIdAndStatus(authorId, Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
+        return ArticleMapper.toFullPageResponse(
+                articleRepository.findByAuthorIdAndStatus(authorId, Article.STATUS_PUBLISHED, pageable),
+                userRepository);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleResponse> getDraftArticlesByAuthorId(Long authorId, Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByAuthorIdAndStatus(authorId, Article.STATUS_DRAFT, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
+        return ArticleMapper.toFullPageResponse(
+                articleRepository.findByAuthorIdAndStatus(authorId, Article.STATUS_DRAFT, pageable),
+                userRepository);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleMetaResponse> getPendingArticles(Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PENDING, pageable)
-                                 .map(ArticleMapper::toArticleMetaResponse));
+        return ArticleMapper.toMetaPageResponse(
+                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PENDING, pageable),
+                userRepository);
     }
 
     @Override
@@ -214,17 +214,17 @@ public class ArticleServiceImpl implements ArticleService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleResponse> searchArticlesByTitle(String key, Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByTitleContainingAndStatus(key, Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
+        return ArticleMapper.toFullPageResponse(
+                articleRepository.findByTitleContainingAndStatus(key, Article.STATUS_PUBLISHED, pageable),
+                userRepository);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PageResponse<ArticleResponse> searchArticlesByTag(String tag, Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByTagsContainingAndStatus(tag, Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
+        return ArticleMapper.toFullPageResponse(
+                articleRepository.findByTagsContainingAndStatus(tag, Article.STATUS_PUBLISHED, pageable),
+                userRepository);
     }
 
     @Async

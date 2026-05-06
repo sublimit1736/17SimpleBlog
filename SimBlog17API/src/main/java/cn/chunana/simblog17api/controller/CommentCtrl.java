@@ -6,7 +6,9 @@ import cn.chunana.simblog17api.dto.response.ApiStatusResponse;
 import cn.chunana.simblog17api.dto.response.CommentResponse;
 import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.entities.Comment;
+import cn.chunana.simblog17api.entities.User;
 import cn.chunana.simblog17api.mapper.CommentMapper;
+import cn.chunana.simblog17api.repository.UserRepository;
 import cn.chunana.simblog17api.services.CommentService;
 import cn.chunana.simblog17api.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class CommentCtrl {
 
-    private final CommentService commentService;
+    private final CommentService  commentService;
+    private final UserRepository  userRepository;
 
     @PostMapping
     @Operation(summary = "发表评论", description = "parentCommentId 为 null 时是文章顶层评论，非 null 时是对某条评论的回复")
@@ -45,7 +48,10 @@ public class CommentCtrl {
 
         Comment comment = commentService.createComment(request, authorId);
         log.info("comment.create id={} authorId={} articleId={}", comment.getId(), authorId, request.articleId());
-        return ApiStatusResponse.ok(CommentMapper.toCommentResponse(comment));
+        User author = userRepository.findById(authorId).orElse(null);
+        return ApiStatusResponse.ok(CommentMapper.toCommentResponse(comment,
+                author != null ? author.getUsername() : null,
+                author != null ? author.getAvatarUrl() : null));
     }
 
     @GetMapping("/by_article/{articleId}")

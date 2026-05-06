@@ -35,8 +35,10 @@ const ArticleListPage: React.FC = () => {
         <Layout>
             <div className="container">
                 <div className={styles.header}>
-                    <h1 className={styles.title}>📄 所有文章</h1>
-                    {!loading && <span className={styles.count}>共 {totalElements} 篇</span>}
+                    <div className={styles.titleGroup}>
+                        <h1 className={styles.title}>📄 所有文章</h1>
+                        {!loading && <span className={styles.count}>共 {totalElements} 篇</span>}
+                    </div>
                 </div>
                 <ArticleList articles={articles} loading={loading}/>
                 <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage}/>

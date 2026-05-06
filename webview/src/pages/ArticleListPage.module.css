@@ -1,16 +1,27 @@
 .header {
     display: flex;
-    align-items: baseline;
-    gap: 12px;
-    padding: 28px 0 20px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 32px 0 24px;
+}
+
+.titleGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
 .title {
-    font-size: 1.6rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: var(--color-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
 }
 
 .count {
-    font-size: 0.9rem;
-    color: var(--color-text-secondary);
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
 }

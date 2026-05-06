@@ -33,7 +33,7 @@ const NotificationsPage: React.FC = () => {
     const markAll = async () => {
         try {
             await notificationsApi.markAllRead();
-            setNotifications((prev) => prev.map((n) => ({...n, isRead: true})));
+            setNotifications((prev) => prev.map((n) => ({...n, status: 1})));
             showToast('已全部标记为已读', 'success');
         } catch {
             showToast('操作失败', 'error');
@@ -43,12 +43,12 @@ const NotificationsPage: React.FC = () => {
     const markOne = async (id: number) => {
         try {
             await notificationsApi.markRead(id);
-            setNotifications((prev) => prev.map((n) => n.id === id ? {...n, isRead: true} : n));
+            setNotifications((prev) => prev.map((n) => n.id === id ? {...n, status: 1} : n));
         } catch { /* silent */
         }
     };
 
-    const unreadCount = notifications.filter((n) => !n.isRead).length;
+    const unreadCount = notifications.filter((n) => n.status === 0).length;
 
     return (
         <Layout>
@@ -72,14 +72,14 @@ const NotificationsPage: React.FC = () => {
                         {notifications.map((n) => (
                             <div
                                 key={n.id}
-                                className={`${styles.item} ${!n.isRead ? styles.unread : ''}`}
-                                onClick={() => !n.isRead && markOne(n.id)}
+                                className={`${styles.item} ${n.status === 0 ? styles.unread : ''}`}
+                                onClick={() => n.status === 0 && markOne(n.id)}
                             >
-                                <div className={styles.dot} data-unread={!n.isRead}/>
+                                <div className={styles.dot} data-unread={n.status === 0}/>
                                 <div className={styles.body}>
-                                    <p className={styles.content}>{n.content}</p>
+                                    <p className={styles.content}>{n.message}</p>
                                     <span className={styles.time}>
-                    {formatDistanceToNow(new Date(n.createdAt), {addSuffix: true, locale: zhCN})}
+                    {formatDistanceToNow(new Date(n.createTime), {addSuffix: true, locale: zhCN})}
                   </span>
                                 </div>
                             </div>

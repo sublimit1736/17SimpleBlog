@@ -21,9 +21,9 @@ const SiteInfoCard: React.FC<SiteInfoCardProps> = ({
   }, [startDate]);
 
   const rows: { label: string; value: string | number }[] = [
-    { label: '文章数目', value: stats?.articleCount ?? '—' },
+    { label: '文章数目', value: stats?.totalArticles ?? '—' },
     { label: '运行时间', value: `${runtimeDays} 天` },
-    { label: '评论总数', value: stats?.commentCount ?? '—' },
+    { label: '评论总数', value: stats?.totalComments ?? '—' },
     { label: '访问次数', value: stats?.totalViews ?? '—' },
   ];
 

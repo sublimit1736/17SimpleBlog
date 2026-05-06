@@ -6,10 +6,12 @@ import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.entities.Article;
 import cn.chunana.simblog17api.entities.ArticleFavorite;
 import cn.chunana.simblog17api.entities.ArticleLike;
+import cn.chunana.simblog17api.entities.User;
 import cn.chunana.simblog17api.mapper.ArticleMapper;
 import cn.chunana.simblog17api.repository.ArticleFavoriteRepository;
 import cn.chunana.simblog17api.repository.ArticleLikeRepository;
 import cn.chunana.simblog17api.repository.ArticleRepository;
+import cn.chunana.simblog17api.repository.UserRepository;
 import cn.chunana.simblog17api.services.ArticleInteractionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -30,6 +34,7 @@ public class ArticleInteractionServiceImpl implements ArticleInteractionService 
     private final ArticleLikeRepository     articleLikeRepository;
     private final ArticleFavoriteRepository articleFavoriteRepository;
     private final ArticleRepository         articleRepository;
+    private final UserRepository            userRepository;
 
     @Override
     public boolean toggleLike(Long articleId, Long userId) {
@@ -114,11 +119,26 @@ public class ArticleInteractionServiceImpl implements ArticleInteractionService 
             }
         }
 
-        List<ArticleMetaResponse> metas = articleIds.stream()
-                                                    .map(articleMap::get)
-                                                    .filter(a -> a != null && a.getStatus() == Article.STATUS_PUBLISHED)
-                                                    .map(ArticleMapper::toArticleMetaResponse)
-                                                    .toList();
+        List<Article> orderedArticles = articleIds.stream()
+                .map(articleMap::get)
+                .filter(a -> a != null && a.getStatus() == Article.STATUS_PUBLISHED)
+                .toList();
+
+        List<Long> authorIds = orderedArticles.stream()
+                .map(Article::getAuthorId)
+                .distinct()
+                .toList();
+        Map<Long, User> userMap = userRepository.findAllById(authorIds).stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+
+        List<ArticleMetaResponse> metas = orderedArticles.stream()
+                .map(a -> {
+                    User author = userMap.get(a.getAuthorId());
+                    return ArticleMapper.toArticleMetaResponse(a,
+                            author != null ? author.getUsername() : null,
+                            author != null ? author.getAvatarUrl() : null);
+                })
+                .toList();
 
         return new PageResponse<>(metas,
                                   articleIdPage.getTotalElements(),

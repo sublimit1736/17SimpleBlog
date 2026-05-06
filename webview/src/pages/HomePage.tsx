@@ -130,7 +130,7 @@ const HomePage: React.FC = () => {
                                                 <span className={styles.commentTime}>
                           {(() => {
                               try {
-                                  return formatDistanceToNow(new Date(c.createdAt), {addSuffix: true, locale: zhCN});
+                                  return formatDistanceToNow(new Date(c.createTime), {addSuffix: true, locale: zhCN});
                               } catch {
                                   return '';
                               }

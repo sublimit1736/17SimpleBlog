@@ -40,8 +40,8 @@ const ArticleList: React.FC<ArticleListProps> = ({
 
   return (
     <div className={styles.list}>
-      {articles.map((article) => (
-        <ArticleCard key={article.id} article={article} showStatus={showStatus} />
+      {articles.map((article, index) => (
+        <ArticleCard key={article.id} article={article} showStatus={showStatus} index={index} />
       ))}
     </div>
   );

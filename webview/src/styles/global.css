@@ -19,23 +19,13 @@ body {
     transition: background-color var(--transition), color var(--transition);
 }
 
-/* Centered column — the "forum frame" */
+/* Centered column */
 #root {
     max-width: var(--site-width);
     margin: 0 auto;
     background: var(--color-surface);
     min-height: 100vh;
     box-sizing: border-box;
-}
-
-/* Only show side borders when the viewport is wider than the column
-   (1000px = var(--site-width) 960px + ~40px margin clearance;
-    CSS @media rules cannot reference custom properties) */
-@media (min-width: 1000px) {
-    #root {
-        border-left: 1px solid var(--color-border);
-        border-right: 1px solid var(--color-border);
-    }
 }
 
 a {

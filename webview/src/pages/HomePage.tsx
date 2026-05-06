@@ -3,6 +3,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import {homeApi} from '../api/home';
 import type {Article, Comment, HotTag, SiteStats} from '../types';
 import Layout from '../components/layout/Layout';
+import HeroBanner from '../components/layout/HeroBanner';
 import ArticleList from '../components/article/ArticleList';
 import Pagination from '../components/ui/Pagination';
 import Tag from '../components/ui/Tag';
@@ -67,6 +68,7 @@ const HomePage: React.FC = () => {
 
     return (
         <Layout>
+            <HeroBanner />
             <div className="container">
                 <div className="page-layout">
                     <div className="page-main">

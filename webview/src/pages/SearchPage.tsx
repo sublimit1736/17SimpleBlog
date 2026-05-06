@@ -34,7 +34,7 @@ const SearchPage: React.FC = () => {
         setSearched(true);
         try {
             if (searchType === 'articles') {
-                const res = await articlesApi.search(trimmed, 0, 20);
+                const res = await articlesApi.searchByTitle(trimmed, 0, 20);
                 setArticles(res.data.statusCode === 0 ? res.data.data.content : []);
                 setUsers([]);
             } else {
@@ -48,13 +48,11 @@ const SearchPage: React.FC = () => {
         }
     }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         setQ(queryParam);
         setType(typeParam);
         doSearch(queryParam, typeParam);
     }, [queryParam, typeParam, doSearch]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();

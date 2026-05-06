@@ -17,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,7 +34,7 @@ public class ArticleCtrl {
     @PreAuthorize("isAuthenticated()")
     public ApiStatusResponse<ArticleResponse> createArticle(@Valid @RequestBody ArticleRequest articleRequest,
                                                             Authentication authentication) {
-        Long currentUserId = resolveCurrentUserId(authentication);
+        Long currentUserId = SecurityUtils.getCurrentUserId(authentication);
         if (currentUserId == null) {
             return ApiStatusResponse.fail(Status.UNAUTHORIZED);
         }
@@ -74,7 +73,7 @@ public class ArticleCtrl {
             Authentication authentication,
             @PageableDefault(sort = "updatedTime") Pageable pageable) {
 
-        Long currentUserId = resolveCurrentUserId(authentication);
+        Long currentUserId = SecurityUtils.getCurrentUserId(authentication);
         if (currentUserId == null) {
             return ApiStatusResponse.fail(Status.UNAUTHORIZED);
         }
@@ -101,27 +100,13 @@ public class ArticleCtrl {
         return ApiStatusResponse.ok(articleService.searchArticlesByTag(keyword, pageable));
     }
 
-    @GetMapping("/search/regex/by_title")
-    public ApiStatusResponse<PageResponse<ArticleResponse>> getArticlesByTitleRegex(
-            @RequestParam String pattern,
-            @PageableDefault(sort = "publishedTime") Pageable pageable) {
-        return ApiStatusResponse.ok(articleService.searchArticlesByTitleRegex(pattern, pageable));
-    }
-
-    @GetMapping("/search/regex/by_tags")
-    public ApiStatusResponse<PageResponse<ArticleResponse>> getArticlesByTagsRegex(
-            @RequestParam String pattern,
-            @PageableDefault(sort = "publishedTime") Pageable pageable) {
-        return ApiStatusResponse.ok(articleService.searchArticlesByTagRegex(pattern, pageable));
-    }
-
     @PostMapping("/draft")
     @PreAuthorize("isAuthenticated()")
     public ApiStatusResponse<ArticleResponse> createDraft(
             @Valid @RequestBody ArticleRequest articleRequest,
             Authentication authentication) {
 
-        Long currentUserId = resolveCurrentUserId(authentication);
+        Long currentUserId = SecurityUtils.getCurrentUserId(authentication);
         if (currentUserId == null) {
             return ApiStatusResponse.fail(Status.UNAUTHORIZED);
         }
@@ -141,7 +126,7 @@ public class ArticleCtrl {
             return ApiStatusResponse.fail(Status.ARTICLE_NOT_FOUND);
         }
 
-        Long currentUserId = resolveCurrentUserId(authentication);
+        Long currentUserId = SecurityUtils.getCurrentUserId(authentication);
         if (currentUserId == null) {
             return ApiStatusResponse.fail(Status.UNAUTHORIZED);
         }
@@ -271,12 +256,5 @@ public class ArticleCtrl {
                              .authorId(authorId)
                              .tags(original.tags())
                              .build();
-    }
-
-    private Long resolveCurrentUserId(Authentication authentication) {
-        Authentication effective = authentication != null
-                ? authentication
-                : SecurityContextHolder.getContext().getAuthentication();
-        return SecurityUtils.getCurrentUserId(effective);
     }
 }

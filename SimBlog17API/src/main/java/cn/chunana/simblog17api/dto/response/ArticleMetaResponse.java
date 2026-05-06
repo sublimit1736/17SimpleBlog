@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Schema(description = "Article response without content and preview")
 public record ArticleMetaResponse(
         @Schema(description = "Article id", example = "1")
-        Integer id,
+        Long id,
 
         @Schema(description = "Article title", example = "My first article")
         String title,

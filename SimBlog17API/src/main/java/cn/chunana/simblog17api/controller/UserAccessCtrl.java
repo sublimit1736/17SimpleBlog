@@ -235,21 +235,12 @@ public class UserAccessCtrl {
     }
 
     @GetMapping("/search/by_username")
-    @Operation(summary = "用户名搜索（纯文本）", description = "按用户名关键字做部分匹配搜索")
+    @Operation(summary = "用户名搜索", description = "按用户名关键字做部分匹配搜索")
     public ApiStatusResponse<PageResponse<UserAccessResponse>> searchUsersByUsername(
             @RequestParam String keyword,
             @PageableDefault(size = 10) Pageable pageable) {
 
         return ApiStatusResponse.ok(userAccessService.searchUsersByUsername(keyword, pageable));
-    }
-
-    @GetMapping("/search/regex/by_username")
-    @Operation(summary = "用户名搜索（正则）", description = "按用户名正则表达式进行搜索")
-    public ApiStatusResponse<PageResponse<UserAccessResponse>> searchUsersByUsernameRegex(
-            @RequestParam String pattern,
-            @PageableDefault(size = 10) Pageable pageable) {
-
-        return ApiStatusResponse.ok(userAccessService.searchUsersByUsernameRegex(pattern, pageable));
     }
 
     @PutMapping(value = "/profile/{uid}/avatar", consumes = "multipart/form-data")

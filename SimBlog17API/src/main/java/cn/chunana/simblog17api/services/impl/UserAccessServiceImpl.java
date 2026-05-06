@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +26,7 @@ public class UserAccessServiceImpl implements UserAccessService {
             return Optional.empty();
         }
 
-        Optional<User> userOptional = Optional.ofNullable(userRepository.findByUsername(username))
-                                              .orElse(Optional.empty());
+        Optional<User> userOptional = userRepository.findByUsername(username);
 
         return userOptional.filter(user -> credentialsMatch(password, user.getPassword()));
     }
@@ -40,8 +37,7 @@ public class UserAccessServiceImpl implements UserAccessService {
             return Optional.empty();
         }
 
-        Optional<User> existing = Optional.ofNullable(userRepository.findByUsername(username))
-                                          .orElse(Optional.empty());
+        Optional<User> existing = userRepository.findByUsername(username);
         if (existing.isPresent()) {
             return Optional.empty();
         }
@@ -71,8 +67,7 @@ public class UserAccessServiceImpl implements UserAccessService {
             return Optional.empty();
         }
 
-        Optional<User> sameNameUser = Optional.ofNullable(userRepository.findByUsername(newUsername))
-                                              .orElse(Optional.empty());
+        Optional<User> sameNameUser = userRepository.findByUsername(newUsername);
         if (sameNameUser.isPresent() && !sameNameUser.get().getId().equals(userId)) {
             return Optional.empty();
         }
@@ -110,14 +105,6 @@ public class UserAccessServiceImpl implements UserAccessService {
                               .map(UserAccessMapper::toUserAccessResponse));
     }
 
-    @Override
-    public PageResponse<UserAccessResponse> searchUsersByUsernameRegex(String pattern, Pageable pageable) {
-        validateRegex(pattern);
-        return PageResponse.from(
-                userRepository.findByUsernameRegex(pattern, pageable)
-                              .map(UserAccessMapper::toUserAccessResponse));
-    }
-
     private boolean credentialsMatch(String provided, String stored) {
         if (isBlank(stored) || isBlank(provided)) {
             return false;
@@ -127,20 +114,5 @@ public class UserAccessServiceImpl implements UserAccessService {
 
     private boolean isBlank(String value) {
         return value == null || value.isBlank();
-    }
-
-    private void validateRegex(String pattern) {
-        if (isBlank(pattern)) {
-            throw new IllegalArgumentException("regex pattern must not be blank");
-        }
-        if (pattern.length() > 256) {
-            throw new IllegalArgumentException("regex pattern length must be at most 256");
-        }
-        try {
-            Pattern.compile(pattern);
-        }
-        catch (PatternSyntaxException exception) {
-            throw new IllegalArgumentException("invalid regex pattern");
-        }
     }
 }

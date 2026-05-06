@@ -42,10 +42,6 @@ public interface ArticleService {
 
     PageResponse<ArticleResponse> searchArticlesByTag(String key, Pageable pageable);
 
-    PageResponse<ArticleResponse> searchArticlesByTitleRegex(String pattern, Pageable pageable);
-
-    PageResponse<ArticleResponse> searchArticlesByTagRegex(String pattern, Pageable pageable);
-
     void increaseViewCountsAsync(Long id);
 
 }

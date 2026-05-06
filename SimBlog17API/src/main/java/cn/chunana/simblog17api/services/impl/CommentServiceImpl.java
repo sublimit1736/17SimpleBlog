@@ -44,11 +44,8 @@ public class CommentServiceImpl implements CommentService {
     })
     public Optional<Comment> deleteComment(Long commentId, Long currentUserId, boolean isAdmin) {
         return commentRepository.findById(commentId)
+                                .filter(comment -> isAdmin || comment.getAuthorId().equals(currentUserId))
                                 .map(comment -> {
-                                    // 非管理员只能删除自己的评论
-                                    if (!isAdmin && !comment.getAuthorId().equals(currentUserId)) {
-                                        return null;
-                                    }
                                     comment.setStatus(Comment.STATUS_DELETED);
                                     Comment saved = commentRepository.save(comment);
                                     if (isAdmin) {

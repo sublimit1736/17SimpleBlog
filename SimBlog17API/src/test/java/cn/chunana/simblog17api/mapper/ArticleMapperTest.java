@@ -98,7 +98,7 @@ class ArticleMapperTest {
     void toResponsesShouldMapExpectedFields() {
         LocalDateTime now = LocalDateTime.of(2026, 4, 11, 12, 0);
         Article article = Article.builder()
-                                 .id(1)
+                                 .id(1L)
                                  .title("mapped")
                                  .content("content")
                                  .contentType(Article.CONTENT_TYPE_MARKDOWN)

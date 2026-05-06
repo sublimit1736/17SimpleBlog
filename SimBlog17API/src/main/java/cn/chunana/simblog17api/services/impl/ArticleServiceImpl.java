@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 @Service
 @Transactional
@@ -205,7 +203,7 @@ public class ArticleServiceImpl implements ArticleService {
                                     notificationService.createModerationNotification(
                                             saved.getAuthorId(),
                                             "ARTICLE",
-                                            saved.getId().longValue(),
+                                    saved.getId(),
                                             "文章审核结果",
                                             buildArticleModerationMessage(status)
                                                                                     );
@@ -229,43 +227,10 @@ public class ArticleServiceImpl implements ArticleService {
                                  .map(ArticleMapper::toArticleResponse));
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public PageResponse<ArticleResponse> searchArticlesByTitleRegex(String pattern, Pageable pageable) {
-        validateRegex(pattern);
-        return PageResponse.from(
-                articleRepository.findByTitleRegexAndStatus(pattern, Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public PageResponse<ArticleResponse> searchArticlesByTagRegex(String pattern, Pageable pageable) {
-        validateRegex(pattern);
-        return PageResponse.from(
-                articleRepository.findByTagsRegexAndStatus(pattern, Article.STATUS_PUBLISHED, pageable)
-                                 .map(ArticleMapper::toArticleResponse));
-    }
-
     @Async
     @Override
     public void increaseViewCountsAsync(Long id) {
         articleRepository.increaseViewCount(id);
-    }
-
-    private void validateRegex(String pattern) {
-        if (pattern == null || pattern.isBlank()) {
-            throw new IllegalArgumentException("regex pattern must not be blank");
-        }
-        if (pattern.length() > 256) {
-            throw new IllegalArgumentException("regex pattern length must be at most 256");
-        }
-        try {
-            Pattern.compile(pattern);
-        }
-        catch (PatternSyntaxException exception) {
-            throw new IllegalArgumentException("invalid regex pattern");
-        }
     }
 
     private int resolvePublishStatusByAuthorId(Long authorId) {

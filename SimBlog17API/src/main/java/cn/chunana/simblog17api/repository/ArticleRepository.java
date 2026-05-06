@@ -26,20 +26,6 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
 
     Page<Article> findByTagsContainingAndStatus(String tag, Integer status, Pageable pageable);
 
-    @Query(value = "SELECT * FROM articles a WHERE a.status = :status AND a.title ~* :pattern",
-           countQuery = "SELECT COUNT(*) FROM articles a WHERE a.status = :status AND a.title ~* :pattern",
-           nativeQuery = true)
-    Page<Article> findByTitleRegexAndStatus(@Param("pattern") String pattern,
-                                            @Param("status") Integer status,
-                                            Pageable pageable);
-
-    @Query(value = "SELECT * FROM articles a WHERE a.status = :status AND a.tags ~* :pattern",
-           countQuery = "SELECT COUNT(*) FROM articles a WHERE a.status = :status AND a.tags ~* :pattern",
-           nativeQuery = true)
-    Page<Article> findByTagsRegexAndStatus(@Param("pattern") String pattern,
-                                           @Param("status") Integer status,
-                                           Pageable pageable);
-
     /**
      * 时间窗口内按浏览量降序排列的热门文章
      */

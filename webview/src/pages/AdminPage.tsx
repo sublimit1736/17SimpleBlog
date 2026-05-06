@@ -41,12 +41,10 @@ const AdminPage: React.FC = () => {
         }
     }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (tab === 'pending') fetchPending();
         if (tab === 'comments') fetchComments();
     }, [tab, fetchPending, fetchComments]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     const approveArticle = async (articleId: number) => {
         try {

@@ -38,7 +38,7 @@ class ArticleServiceImplTest {
 
     @Test
     void deleteArticleShouldMarkStatusAsDeleted() {
-        Article article = Article.builder().id(1).status(Article.STATUS_PUBLISHED).build();
+        Article article = Article.builder().id(1L).status(Article.STATUS_PUBLISHED).build();
         when(articleRepository.findById(1L)).thenReturn(Optional.of(article));
         when(articleRepository.save(article)).thenReturn(article);
 

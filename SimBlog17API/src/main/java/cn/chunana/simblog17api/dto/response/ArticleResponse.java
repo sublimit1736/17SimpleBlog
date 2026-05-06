@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Schema(description = "Article response with full content")
 public record ArticleResponse(
-        @Schema(description = "Article id", example = "1") Integer id,
+        @Schema(description = "Article id", example = "1") Long id,
         @Schema(description = "Article title", example = "My first article") String title,
         @Schema(description = "Article content") String content,
         @Schema(description = "Article content type", example = "MARKDOWN") String contentType,

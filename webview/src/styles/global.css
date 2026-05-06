@@ -19,6 +19,23 @@ body {
     transition: background-color var(--transition), color var(--transition);
 }
 
+/* Centered column — the "forum frame" */
+#root {
+    max-width: var(--site-width);
+    margin: 0 auto;
+    background: var(--color-surface);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Only show side borders when the viewport is wider than the column */
+@media (min-width: 1000px) {
+    #root {
+        border-left: 1px solid var(--color-border);
+        border-right: 1px solid var(--color-border);
+    }
+}
+
 a {
     color: var(--color-primary);
     text-decoration: none;
@@ -69,14 +86,12 @@ ul, ol {
 
 /* Layout */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
+    padding: 0 20px;
 }
 
 .page-layout {
     display: flex;
-    gap: 24px;
+    gap: 20px;
     align-items: flex-start;
     padding: 24px 0;
 }

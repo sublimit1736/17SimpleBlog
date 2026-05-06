@@ -19,7 +19,8 @@
     --radius-md: 12px;
     --radius-lg: 16px;
     --header-height: 64px;
-    --sidebar-width: 300px;
+    --site-width: 960px;
+    --sidebar-width: 260px;
     --transition: 0.2s ease;
 }
 

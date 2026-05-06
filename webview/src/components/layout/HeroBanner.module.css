@@ -5,6 +5,8 @@
   width: 100vw;
   left: 50%;
   transform: translateX(-50%);
+  /* extend upward to fill behind the fixed transparent header */
+  margin-top: calc(-1 * var(--header-height));
   height: 100vh;
   min-height: 500px;
   overflow: hidden;

@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -54,7 +55,7 @@ class ArticleServiceImplTest {
                                               .content("<script>alert('x')</script>")
                                               .contentType(Article.CONTENT_TYPE_HTML)
                                               .authorId(1001L)
-                                              .tags("java")
+                                              .tags(List.of("java"))
                                               .build();
 
         assertThrows(IllegalArgumentException.class, () -> articleService.createArticle(request));

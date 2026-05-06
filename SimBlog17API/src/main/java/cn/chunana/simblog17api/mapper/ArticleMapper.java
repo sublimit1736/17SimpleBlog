@@ -6,6 +6,8 @@ import cn.chunana.simblog17api.dto.response.ArticleResponse;
 import cn.chunana.simblog17api.entities.Article;
 import cn.chunana.simblog17api.utils.HtmlSanitizer;
 
+import java.util.List;
+
 public final class ArticleMapper {
 
     private ArticleMapper() {
@@ -19,7 +21,7 @@ public final class ArticleMapper {
                       .contentType(articleRequest.contentType())
                       .preview(toPreview(normalizedContent, articleRequest.contentType()))
                       .authorId(articleRequest.authorId())
-                      .tags(articleRequest.tags())
+                      .tags(toTagsString(articleRequest.tags()))
                       .status(Article.STATUS_PUBLISHED)
                       .viewCount(0)
                       .build();
@@ -31,7 +33,7 @@ public final class ArticleMapper {
         article.setContent(normalizedContent);
         article.setContentType(articleRequest.contentType());
         article.setPreview(toPreview(normalizedContent, articleRequest.contentType()));
-        article.setTags(articleRequest.tags());
+        article.setTags(toTagsString(articleRequest.tags()));
     }
 
     public static ArticleResponse toArticleResponse(Article article) {
@@ -87,6 +89,16 @@ public final class ArticleMapper {
             return HtmlSanitizer.sanitize(content);
         }
         return content;
+    }
+
+    private static String toTagsString(List<String> tags) {
+        if (tags == null || tags.isEmpty()) {
+            return null;
+        }
+        return tags.stream()
+                   .filter(t -> t != null && !t.isBlank())
+                   .map(t -> t.replace(",", ""))
+                   .collect(java.util.stream.Collectors.joining(","));
     }
 }
 

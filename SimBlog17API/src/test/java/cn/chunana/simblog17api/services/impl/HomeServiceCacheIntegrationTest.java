@@ -131,7 +131,7 @@ class HomeServiceCacheIntegrationTest {
                                                    .content("cache evict content")
                                                    .contentType(Article.CONTENT_TYPE_MARKDOWN)
                                                    .authorId(1001L)
-                                                   .tags("spring")
+                                                   .tags(List.of("spring"))
                                                    .build());
 
         homeService.getLatestArticles(pageable);

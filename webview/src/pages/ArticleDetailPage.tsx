@@ -8,7 +8,6 @@ import {useToast} from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import MarkdownRenderer from '../components/article/MarkdownRenderer';
 import Avatar from '../components/ui/Avatar';
-import Tag from '../components/ui/Tag';
 import Button from '../components/ui/Button';
 import {Loading} from '../components/ui/Loading';
 import {format, formatDistanceToNow} from 'date-fns';
@@ -275,50 +274,57 @@ const ArticleDetailPage: React.FC = () => {
 
     return (
         <Layout>
-            <div className="container">
-                <article className={styles.article}>
-                    {/* Header */}
-                    <div className={styles.articleHeader}>
-                        <div className={styles.metaTop}>
-                            {article.tags?.map((tag) => (
-                                <Tag key={tag} label={tag}
-                                     linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`}/>
+            {/* Full-width article hero */}
+            <div className={styles.articleHero}>
+                <div className={styles.heroOverlay} />
+                <div className={styles.heroContent}>
+                    {article.tags && article.tags.length > 0 && (
+                        <div className={styles.heroTags}>
+                            {article.tags.map((tag) => (
+                                <Link
+                                    key={tag}
+                                    to={`/search?type=articles&q=${encodeURIComponent(tag)}`}
+                                    className={styles.heroTag}
+                                >
+                                    #{tag}
+                                </Link>
                             ))}
                         </div>
-                        <h1 className={styles.title}>{article.title}</h1>
-                        <div className={styles.authorRow}>
-                            <Avatar src={article.authorAvatarUrl} username={article.authorName} size={40}/>
-                            <div>
-                                <Link to={`/profile/${article.authorId}`} className={styles.authorName}>
-                                    {article.authorName || '未知用户'}
-                                </Link>
-                                <div className={styles.articleMeta}>
-                                    <span>📅 {timeStr}</span>
-                                    <span>👁 {article.viewCount} 次阅读</span>
-                                    <span>💬 {article.commentCount} 条评论</span>
-                                </div>
-                            </div>
-                            {canEdit && (
-                                <div className={styles.editActions}>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        onClick={() => navigate(`/edit/${article.id}`)}
-                                    >
-                                        ✏ 编辑
-                                    </Button>
-                                    <Button
-                                        variant="danger"
-                                        size="sm"
-                                        onClick={handleDeleteArticle}
-                                    >
-                                        🗑 删除
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
+                    )}
+                    <h1 className={styles.heroTitle}>{article.title}</h1>
+                    <div className={styles.heroMeta}>
+                        <Avatar src={article.authorAvatarUrl} username={article.authorName} size={28} />
+                        <Link to={`/profile/${article.authorId}`} className={styles.heroAuthor}>
+                            {article.authorName || '未知用户'}
+                        </Link>
+                        <span className={styles.heroMetaSep}>·</span>
+                        <span>📅 {timeStr}</span>
+                        <span className={styles.heroMetaSep}>·</span>
+                        <span>👁 {article.viewCount}</span>
+                        <span className={styles.heroMetaSep}>·</span>
+                        <span>💬 {article.commentCount}</span>
                     </div>
+                    {canEdit && (
+                        <div className={styles.heroActions}>
+                            <button
+                                className={styles.heroActionBtn}
+                                onClick={() => navigate(`/edit/${article.id}`)}
+                            >
+                                ✏ 编辑
+                            </button>
+                            <button
+                                className={`${styles.heroActionBtn} ${styles.heroActionDanger}`}
+                                onClick={handleDeleteArticle}
+                            >
+                                🗑 删除
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </div>
 
+            <div className="container">
+                <article className={styles.article}>
                     {/* Content */}
                     <div className={styles.content}>
                         <MarkdownRenderer content={article.content} contentType={article.contentType}/>

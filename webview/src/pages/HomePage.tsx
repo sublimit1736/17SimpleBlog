@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import {homeApi} from '../api/home';
 import type {Article, Comment, HotTag, SiteStats} from '../types';
 import Layout from '../components/layout/Layout';
@@ -8,6 +8,8 @@ import ArticleList from '../components/article/ArticleList';
 import Pagination from '../components/ui/Pagination';
 import Tag from '../components/ui/Tag';
 import Avatar from '../components/ui/Avatar';
+import BloggerCard from '../components/sidebar/BloggerCard';
+import SiteInfoCard from '../components/sidebar/SiteInfoCard';
 import {formatDistanceToNow} from 'date-fns';
 import {zhCN} from 'date-fns/locale';
 import styles from './HomePage.module.css';
@@ -15,7 +17,6 @@ import styles from './HomePage.module.css';
 type TabType = 'latest' | 'hot';
 
 const HomePage: React.FC = () => {
-    const navigate = useNavigate();
     const [tab, setTab] = useState<TabType>('latest');
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
@@ -92,30 +93,11 @@ const HomePage: React.FC = () => {
                     </div>
 
                     <aside className="page-sidebar">
-                        {/* Stats */}
-                        {stats && (
-                            <div className="card">
-                                <h3 className={styles.sideTitle}>📊 站点统计</h3>
-                                <div className={styles.statsGrid}>
-                                    <div className={styles.statItem}>
-                                        <span className={styles.statNum}>{stats.userCount}</span>
-                                        <span className={styles.statLabel}>用户</span>
-                                    </div>
-                                    <div className={styles.statItem}>
-                                        <span className={styles.statNum}>{stats.articleCount}</span>
-                                        <span className={styles.statLabel}>文章</span>
-                                    </div>
-                                    <div className={styles.statItem}>
-                                        <span className={styles.statNum}>{stats.commentCount}</span>
-                                        <span className={styles.statLabel}>评论</span>
-                                    </div>
-                                    <div className={styles.statItem}>
-                                        <span className={styles.statNum}>{stats.totalViews}</span>
-                                        <span className={styles.statLabel}>浏览</span>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        {/* Blogger Info Card */}
+                        <BloggerCard stats={stats} />
+
+                        {/* Site Info Card */}
+                        <SiteInfoCard stats={stats} />
 
                         {/* Hot Tags */}
                         {hotTags.length > 0 && (
@@ -163,22 +145,6 @@ const HomePage: React.FC = () => {
                                 </div>
                             </div>
                         )}
-
-                        {/* Quick links */}
-                        <div className="card">
-                            <h3 className={styles.sideTitle}>🚀 快速入口</h3>
-                            <div className={styles.quickLinks}>
-                                <button className={styles.quickLink} onClick={() => navigate('/write')}>
-                                    ✏ 写文章
-                                </button>
-                                <button className={styles.quickLink} onClick={() => navigate('/articles')}>
-                                    📄 所有文章
-                                </button>
-                                <button className={styles.quickLink} onClick={() => navigate('/search')}>
-                                    🔍 搜索内容
-                                </button>
-                            </div>
-                        </div>
                     </aside>
                 </div>
             </div>

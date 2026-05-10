@@ -211,6 +211,13 @@ const MetaConfigContent: React.FC = () => {
     const avatarFileRef = useRef<HTMLInputElement>(null);
     const bloggerBgFileRef = useRef<HTMLInputElement>(null);
 
+    // Pre-computed safe URLs — used for both preview conditions and <img src>
+    // to give static analysis a clear sanitized data flow.
+    const safeFaviconUrl = sanitizeImageUrl(editFaviconUrl);
+    const safeLogoUrl = sanitizeImageUrl(editLogoUrl);
+    const safeAvatarUrl = sanitizeImageUrl(editBloggerAvatar);
+    const safeBloggerBgUrl = sanitizeImageUrl(editBloggerBg);
+
     /** Wrap any save action with a token re-confirmation dialog. */
     const requireToken = (action: () => void) => {
         setPendingSave({fn: action});
@@ -360,8 +367,8 @@ const MetaConfigContent: React.FC = () => {
                         <div className={styles.grid2}>
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>浏览器标签页图标（小图标）</label>
-                                {editFaviconUrl && (
-                                    <img src={sanitizeImageUrl(editFaviconUrl)} alt="favicon preview" className={styles.iconPreview} />
+                                {safeFaviconUrl && (
+                                    <img src={safeFaviconUrl} alt="favicon preview" className={styles.iconPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -386,8 +393,8 @@ const MetaConfigContent: React.FC = () => {
 
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>顶栏图标（大图标）</label>
-                                {editLogoUrl && (
-                                    <img src={sanitizeImageUrl(editLogoUrl)} alt="logo preview" className={styles.logoPreview} />
+                                {safeLogoUrl && (
+                                    <img src={safeLogoUrl} alt="logo preview" className={styles.logoPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -488,8 +495,8 @@ const MetaConfigContent: React.FC = () => {
 
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>博主头像</label>
-                                {editBloggerAvatar && (
-                                    <img src={sanitizeImageUrl(editBloggerAvatar)} alt="avatar preview" className={styles.avatarPreview} />
+                                {safeAvatarUrl && (
+                                    <img src={safeAvatarUrl} alt="avatar preview" className={styles.avatarPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -514,8 +521,8 @@ const MetaConfigContent: React.FC = () => {
 
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>博主卡片背景图</label>
-                                {editBloggerBg && (
-                                    <img src={sanitizeImageUrl(editBloggerBg)} alt="bg preview" className={styles.bgPreview} />
+                                {safeBloggerBgUrl && (
+                                    <img src={safeBloggerBgUrl} alt="bg preview" className={styles.bgPreview} />
                                 )}
                                 <input
                                     className={styles.input}

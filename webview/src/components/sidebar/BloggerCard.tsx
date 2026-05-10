@@ -17,7 +17,7 @@ const BloggerCard: React.FC<BloggerCardProps> = ({ stats }) => {
   const name = bloggerName || '博主';
   const safeBgUrl = sanitizeImageUrl(bloggerBgUrl);
   const coverStyle = safeBgUrl
-    ? { backgroundImage: `url(${safeBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+    ? { backgroundImage: `url('${safeBgUrl}')`, backgroundSize: 'cover', backgroundPosition: 'center' }
     : undefined;
 
   return (

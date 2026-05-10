@@ -86,7 +86,7 @@ const HeroBanner: React.FC = () => {
   const safeSlideUrl = hasBgImages ? sanitizeImageUrl(heroImages[slideIndex]) : '';
   const bgStyle = safeSlideUrl
     ? {
-        backgroundImage: `url(${safeSlideUrl})`,
+        backgroundImage: `url('${safeSlideUrl}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }

@@ -1,10 +1,7 @@
 import client from './client';
-import type {ApiResponse, Article, PageResponse} from '../types';
+import type {ApiResponse, Article, Interaction, PageResponse} from '../types';
 
 export const articlesApi = {
-    create: (data: { title: string; content: string; contentType: string; authorId: number; tags: string[] }) =>
-        client.post<ApiResponse<Article>>('/articles/new', data),
-
     getById: (id: number) =>
         client.get<ApiResponse<Article>>(`/articles/view/${id}`),
 
@@ -20,17 +17,11 @@ export const articlesApi = {
     searchByTags: (keyword: string, page = 0, size = 10) =>
         client.get<ApiResponse<PageResponse<Article>>>('/articles/search/by_tags', {params: {keyword, page, size}}),
 
-    createDraft: (data: { title: string; content: string; contentType: string; authorId: number; tags: string[] }) =>
-        client.post<ApiResponse<Article>>('/articles/draft', data),
-
     getDrafts: (uid: number, page = 0, size = 10) =>
         client.get<ApiResponse<PageResponse<Article>>>(`/articles/profile/${uid}/drafts`, {params: {page, size}}),
 
     updateDraft: (id: number, data: Partial<Article>) =>
         client.put<ApiResponse<Article>>(`/articles/draft/${id}`, data),
-
-    search: (keyword: string, page = 0, size = 10) =>
-        client.get<ApiResponse<PageResponse<Article>>>('/articles/search/by_title', {params: {keyword, page, size}}),
 
     saveDraft: (data: { title: string; content: string; summary?: string; contentType: string; tags: string[] }) =>
         client.post<ApiResponse<Article>>('/articles/draft', data),
@@ -60,12 +51,7 @@ export const articlesApi = {
         client.post<ApiResponse<boolean>>(`/articles/${id}/favorite`),
 
     getInteractions: (id: number) =>
-        client.get<ApiResponse<{
-            likeCount: number;
-            favoriteCount: number;
-            liked: boolean;
-            favorited: boolean
-        }>>(`/articles/${id}/interactions`),
+        client.get<ApiResponse<Interaction>>(`/articles/${id}/interactions`),
 
     getLikedArticles: (uid: number, page = 0, size = 10) =>
         client.get<ApiResponse<PageResponse<Article>>>(`/articles/profile/${uid}/likes`, {params: {page, size}}),

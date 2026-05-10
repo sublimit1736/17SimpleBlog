@@ -2,18 +2,18 @@
 export interface ApiResponse<T> {
     statusCode: number;
     statusMessage: string;
-    timeStamp: string;
+    timeStamp: number;
     traceId: string;
     data: T;
 }
 
-// Paged response
+// Paged response — matches backend PageResponse record fields
 export interface PageResponse<T> {
     content: T[];
     totalElements: number;
     totalPages: number;
-    number: number;
-    size: number;
+    pageNumber: number;
+    pageSize: number;
 }
 
 // User
@@ -24,6 +24,9 @@ export interface User {
     username: string;
     avatarUrl?: string;
     role: UserRole;
+    createTime?: string;
+    accessToken?: string;
+    refreshToken?: string;
 }
 
 export interface LoginResponse extends User {
@@ -47,20 +50,17 @@ export type ContentType = 'PLAIN_TEXT' | 'MARKDOWN' | 'HTML';
 export interface Article {
     id: number;
     title: string;
-    content: string;
-    summary?: string;
+    content?: string;          // only in ArticleResponse (detail), absent in ArticleMetaResponse
+    preview?: string;
     contentType: ContentType;
     authorId: number;
     authorName?: string;
     authorAvatarUrl?: string;
-    tags: string[];
+    tags: string | null;       // comma-separated string from backend
     status: ArticleStatusValue;
     viewCount: number;
-    likeCount: number;
-    favoriteCount: number;
-    commentCount: number;
-    createdAt: string;
-    updatedAt: string;
+    publishedTime: string;
+    updatedTime: string;
 }
 
 // Comment
@@ -73,38 +73,40 @@ export interface Comment {
     authorAvatarUrl?: string;
     parentCommentId?: number;
     status: number;
-    createdAt: string;
+    createTime: string;
     children?: Comment[];
 }
 
-// Notification
+// Notification — matches backend NotificationResponse record fields
 export interface Notification {
     id: number;
-    userId: number;
     type: string;
-    content: string;
-    isRead: boolean;
-    createdAt: string;
-    relatedId?: number;
+    targetType?: string;
+    targetId?: number;
+    title?: string;
+    message: string;
+    status: number;            // 0 = unread, 1 = read
+    createTime: string;
+    readTime?: string;
 }
 
-// Site stats
+// Site stats — matches backend HomeSiteStatsResponse
 export interface SiteStats {
-    userCount: number;
-    articleCount: number;
-    commentCount: number;
+    totalUsers: number;
+    totalArticles: number;
+    totalComments: number;
     totalViews: number;
 }
 
-// Interaction
+// Interaction — matches backend ArticleInteractionResponse
 export interface Interaction {
     likeCount: number;
     favoriteCount: number;
-    liked: boolean;
-    favorited: boolean;
+    likedByCurrentUser: boolean;
+    favoritedByCurrentUser: boolean;
 }
 
-// Hot tag
+// Hot tag — matches backend HomeHotTagEntry
 export interface HotTag {
     tag: string;
     count: number;

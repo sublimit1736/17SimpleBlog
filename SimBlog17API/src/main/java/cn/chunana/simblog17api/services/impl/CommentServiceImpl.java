@@ -7,6 +7,7 @@ import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.entities.Comment;
 import cn.chunana.simblog17api.mapper.CommentMapper;
 import cn.chunana.simblog17api.repository.CommentRepository;
+import cn.chunana.simblog17api.repository.UserRepository;
 import cn.chunana.simblog17api.services.CommentService;
 import cn.chunana.simblog17api.services.NotificationService;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository   commentRepository;
     private final NotificationService notificationService;
+    private final UserRepository      userRepository;
 
     @Override
     @Caching(evict = {
@@ -44,11 +46,8 @@ public class CommentServiceImpl implements CommentService {
     })
     public Optional<Comment> deleteComment(Long commentId, Long currentUserId, boolean isAdmin) {
         return commentRepository.findById(commentId)
+                                .filter(comment -> isAdmin || comment.getAuthorId().equals(currentUserId))
                                 .map(comment -> {
-                                    // 非管理员只能删除自己的评论
-                                    if (!isAdmin && !comment.getAuthorId().equals(currentUserId)) {
-                                        return null;
-                                    }
                                     comment.setStatus(Comment.STATUS_DELETED);
                                     Comment saved = commentRepository.save(comment);
                                     if (isAdmin) {
@@ -104,10 +103,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public PageResponse<CommentResponse> getCommentsByArticleId(Long articleId, Pageable pageable) {
-        return PageResponse.from(
+        return CommentMapper.toCommentPageResponse(
                 commentRepository.findByArticleIdAndStatusOrderByCreateTimeAsc(
-                                         articleId, Comment.STATUS_APPROVED, pageable)
-                                 .map(CommentMapper::toCommentResponse));
+                        articleId, Comment.STATUS_APPROVED, pageable),
+                userRepository);
     }
 }
 

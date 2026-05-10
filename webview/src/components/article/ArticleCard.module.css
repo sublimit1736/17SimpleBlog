@@ -1,23 +1,70 @@
+/* Horizontal card — image on left, info on right */
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  padding: 20px 24px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
   transition: all var(--transition);
   box-shadow: var(--shadow-sm);
+  min-height: 200px;
 }
 
 .card:hover {
   box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   border-color: var(--color-primary);
+}
+
+/* flip image to right side */
+.imageRight {
+  flex-direction: row-reverse;
+}
+
+/* Cover image block */
+.cover {
+  flex: 0 0 280px;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  text-decoration: none;
+  position: relative;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .cover {
+  transform: scale(1.03);
+}
+
+.coverIcon {
+  font-size: 3.5rem;
+  color: rgba(255, 255, 255, 0.35);
+  user-select: none;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.card:hover .coverIcon {
+  color: rgba(255, 255, 255, 0.55);
+  transform: scale(1.15) rotate(15deg);
+}
+
+/* Info block */
+.info {
+  flex: 1;
+  padding: 22px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
 }
 
 .top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
 }
 
 .authorInfo {
@@ -53,11 +100,10 @@
 .titleLink {
   text-decoration: none;
   display: block;
-  margin-bottom: 10px;
 }
 
 .title {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--color-text);
   line-height: 1.4;
@@ -68,10 +114,10 @@
 .excerpt {
   font-size: 0.875rem;
   color: var(--color-text-secondary);
-  line-height: 1.6;
-  margin-bottom: 12px;
+  line-height: 1.65;
+  flex: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -80,7 +126,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 14px;
 }
 
 .footer {
@@ -89,6 +134,7 @@
   justify-content: space-between;
   padding-top: 12px;
   border-top: 1px solid var(--color-border);
+  margin-top: auto;
 }
 
 .stats {
@@ -105,9 +151,29 @@
 }
 
 .readMore {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--color-primary);
-  font-weight: 500;
-  transition: gap var(--transition);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color var(--transition);
 }
 .readMore:hover { color: var(--color-primary-hover); }
+
+/* Responsive: stack vertically on small screens */
+@media (max-width: 640px) {
+  .card,
+  .imageRight {
+    flex-direction: column;
+  }
+
+  .cover {
+    flex: 0 0 160px;
+    min-height: 160px;
+    width: 100%;
+  }
+
+  .info {
+    padding: 16px 18px;
+  }
+}
+

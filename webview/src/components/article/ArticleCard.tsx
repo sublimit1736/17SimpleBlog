@@ -10,6 +10,7 @@ import styles from './ArticleCard.module.css';
 interface ArticleCardProps {
   article: Article;
   showStatus?: boolean;
+  index?: number;
 }
 
 const statusLabels: Record<number, { label: string; color: string }> = {
@@ -21,10 +22,21 @@ const statusLabels: Record<number, { label: string; color: string }> = {
   [ArticleStatus.PENDING]: { label: '待审核', color: '#f59e0b' },
 };
 
-const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false }) => {
+const COVER_GRADIENTS = [
+  'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+  'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+  'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+  'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)',
+  'linear-gradient(135deg, #fa709a 0%, #fee140 100%)',
+  'linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)',
+  'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
+  'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)',
+];
+
+const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false, index = 0 }) => {
   const timeAgo = (() => {
     try {
-      return formatDistanceToNow(new Date(article.createdAt), { addSuffix: true, locale: zhCN });
+      return formatDistanceToNow(new Date(article.publishedTime), { addSuffix: true, locale: zhCN });
     } catch {
       return '';
     }
@@ -32,52 +44,73 @@ const ArticleCard: React.FC<ArticleCardProps> = ({ article, showStatus = false }
 
   const statusInfo = statusLabels[article.status];
 
-  // eslint-disable-next-line no-useless-escape
-  const excerpt = article.content.replace(/[#*`>\[\]]/g, '').substring(0, 120);
+  // Use preview if available, otherwise fall back to stripping content markdown
+  const excerpt = article.preview
+    || (article.content
+        // eslint-disable-next-line no-useless-escape
+        ? article.content.replace(/[#*`>\[\]!]/g, '').replace(/\n+/g, ' ').trim().substring(0, 150)
+        : '');
+
+  const coverGradient = COVER_GRADIENTS[index % COVER_GRADIENTS.length];
+  const imageRight = index % 2 !== 0;
+
+  // Parse tags from comma-separated string
+  const tagList = article.tags
+    ? article.tags.split(',').map((t) => t.trim()).filter(Boolean)
+    : [];
 
   return (
-    <article className={styles.card}>
-      <div className={styles.top}>
-        <div className={styles.authorInfo}>
-          <Avatar src={article.authorAvatarUrl} username={article.authorName} size={32} />
-          <div>
-            <Link to={`/profile/${article.authorId}`} className={styles.authorName}>
-              {article.authorName || '未知用户'}
-            </Link>
-            <span className={styles.time}>{timeAgo}</span>
-          </div>
-        </div>
-        {showStatus && statusInfo && (
-          <span className={styles.status} style={{ color: statusInfo.color, borderColor: statusInfo.color }}>
-            {statusInfo.label}
-          </span>
-        )}
-      </div>
-
-      <Link to={`/article/${article.id}`} className={styles.titleLink}>
-        <h2 className={styles.title}>{article.title}</h2>
+    <article className={`${styles.card} ${imageRight ? styles.imageRight : ''}`}>
+      {/* Cover image side */}
+      <Link to={`/article/${article.id}`} className={styles.cover} style={{ background: coverGradient }}>
+        <span className={styles.coverIcon}>✦</span>
       </Link>
 
-      {excerpt && <p className={styles.excerpt}>{excerpt}{article.content.length > 120 ? '...' : ''}</p>}
-
-      {article.tags && article.tags.length > 0 && (
-        <div className={styles.tags}>
-          {article.tags.slice(0, 4).map((tag) => (
-            <Tag key={tag} label={tag} linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`} />
-          ))}
+      {/* Info side */}
+      <div className={styles.info}>
+        <div className={styles.top}>
+          <div className={styles.authorInfo}>
+            <Avatar src={article.authorAvatarUrl} username={article.authorName} size={30} />
+            <div>
+              <Link to={`/profile/${article.authorId}`} className={styles.authorName}>
+                {article.authorName || '未知用户'}
+              </Link>
+              <span className={styles.time}>{timeAgo}</span>
+            </div>
+          </div>
+          {showStatus && statusInfo && (
+            <span className={styles.status} style={{ color: statusInfo.color, borderColor: statusInfo.color }}>
+              {statusInfo.label}
+            </span>
+          )}
         </div>
-      )}
 
-      <div className={styles.footer}>
-        <div className={styles.stats}>
-          <span title="浏览">👁 {article.viewCount}</span>
-          <span title="点赞">👍 {article.likeCount}</span>
-          <span title="评论">💬 {article.commentCount}</span>
-          <span title="收藏">⭐ {article.favoriteCount}</span>
-        </div>
-        <Link to={`/article/${article.id}`} className={styles.readMore}>
-          阅读全文 →
+        <Link to={`/article/${article.id}`} className={styles.titleLink}>
+          <h2 className={styles.title}>{article.title}</h2>
         </Link>
+
+        {excerpt && (
+          <p className={styles.excerpt}>
+            {excerpt}{excerpt.length >= 150 ? '...' : ''}
+          </p>
+        )}
+
+        {tagList.length > 0 && (
+          <div className={styles.tags}>
+            {tagList.slice(0, 4).map((tag) => (
+              <Tag key={tag} label={tag} linkTo={`/search?type=articles&q=${encodeURIComponent(tag)}`} />
+            ))}
+          </div>
+        )}
+
+        <div className={styles.footer}>
+          <div className={styles.stats}>
+            <span title="浏览">👁 {article.viewCount}</span>
+          </div>
+          <Link to={`/article/${article.id}`} className={styles.readMore}>
+            阅读全文 →
+          </Link>
+        </div>
       </div>
     </article>
   );

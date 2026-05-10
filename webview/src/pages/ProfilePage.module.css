@@ -1,11 +1,27 @@
+.profileHero {
+    position: relative;
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: var(--radius-lg);
+    margin-bottom: -48px;
+    overflow: hidden;
+}
+
+.profileHeroOverlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(0,0,0,0.25));
+}
+
 .profileHeader {
     display: flex;
-    align-items: center;
-    gap: 24px;
+    align-items: flex-end;
+    gap: 20px;
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    padding: 32px;
+    padding: 20px 28px 28px;
     margin-bottom: 28px;
     box-shadow: var(--shadow-sm);
 }
@@ -13,6 +29,7 @@
 .avatarWrap {
     position: relative;
     flex-shrink: 0;
+    margin-bottom: -4px;
 }
 
 .avatarEdit {
@@ -77,32 +94,37 @@
 
 .tabBar {
     display: flex;
-    border-bottom: 2px solid var(--color-border);
-    margin-bottom: 24px;
     gap: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    margin-bottom: 24px;
 }
 
 .tabBtn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
+    flex: 1;
+    padding: 9px 16px;
+    font-size: 0.875rem;
     font-weight: 500;
     background: none;
     border: none;
     cursor: pointer;
     color: var(--color-text-secondary);
-    border-bottom: 2px solid transparent;
-    margin-bottom: -2px;
-    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-    transition: color var(--transition), border-color var(--transition);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition);
+    white-space: nowrap;
 }
 
 .tabBtn:hover {
     color: var(--color-text);
+    background: var(--color-surface-hover);
 }
 
 .tabActive {
-    color: var(--color-primary) !important;
-    border-bottom-color: var(--color-primary) !important;
+    background: var(--color-gradient) !important;
+    color: #fff !important;
+    box-shadow: var(--shadow-sm);
 }
 
 .modalForm {
@@ -140,17 +162,23 @@
 }
 
 @media (max-width: 600px) {
+    .profileHero {
+        height: 120px;
+        margin-bottom: -36px;
+    }
+
     .profileHeader {
         flex-direction: column;
-        text-align: center;
-        padding: 24px;
+        align-items: flex-start;
+        text-align: left;
+        padding: 20px;
     }
 
     .usernameRow {
-        justify-content: center;
+        justify-content: flex-start;
     }
 
     .editBtns {
-        justify-content: center;
+        justify-content: flex-start;
     }
 }

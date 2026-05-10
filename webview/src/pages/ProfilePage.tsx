@@ -164,6 +164,11 @@ const ProfilePage: React.FC = () => {
     return (
         <Layout>
             <div className="container">
+                {/* Hero banner */}
+                <div className={styles.profileHero}>
+                    <div className={styles.profileHeroOverlay}/>
+                </div>
+
                 <div className={styles.profileHeader}>
                     <div className={styles.avatarWrap}>
                         <Avatar src={profile.avatarUrl} username={profile.username} size={96}/>

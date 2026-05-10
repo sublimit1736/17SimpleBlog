@@ -31,7 +31,7 @@ public class Article {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "主键 ID", example = "1")
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     @Schema(description = "文章标题", example = "我的第一篇文章")

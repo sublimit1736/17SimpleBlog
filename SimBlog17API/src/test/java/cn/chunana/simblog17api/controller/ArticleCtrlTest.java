@@ -49,7 +49,7 @@ class ArticleCtrlTest {
 
     @Test
     void viewArticleShouldReturnArticleResponse() throws Exception {
-        Article article = buildArticle(1, "title", "content", "preview");
+        Article article = buildArticle(1L, "title", "content", "preview");
         when(articleService.getArticleById(1L)).thenReturn(Optional.of(article));
 
         mockMvc.perform(get("/api/articles/view/1"))
@@ -65,7 +65,7 @@ class ArticleCtrlTest {
     @Test
     void getAllArticlesShouldReturnMetaResponsePage() throws Exception {
         ArticleMetaResponse article = ArticleMetaResponse.builder()
-                                                         .id(2)
+                                                         .id(2L)
                                                          .title("meta")
                                                          .contentType(Article.CONTENT_TYPE_MARKDOWN)
                                                          .authorId(1001L)
@@ -105,7 +105,7 @@ class ArticleCtrlTest {
                .andExpect(jsonPath("$.statusCode").value(Status.UNAUTHORIZED.getCode()));
     }
 
-    private Article buildArticle(Integer id, String title, String content, String preview) {
+    private Article buildArticle(Long id, String title, String content, String preview) {
         LocalDateTime now = LocalDateTime.of(2026, 4, 11, 12, 0, 0);
         return Article.builder()
                       .id(id)

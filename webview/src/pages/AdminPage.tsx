@@ -41,12 +41,10 @@ const AdminPage: React.FC = () => {
         }
     }, []);
 
-    /* eslint-disable react-hooks/set-state-in-effect */
     useEffect(() => {
         if (tab === 'pending') fetchPending();
         if (tab === 'comments') fetchComments();
     }, [tab, fetchPending, fetchComments]);
-    /* eslint-enable react-hooks/set-state-in-effect */
 
     const approveArticle = async (articleId: number) => {
         try {
@@ -157,7 +155,7 @@ const AdminPage: React.FC = () => {
                                     <div className={styles.rowInfo}>
                                         <Link to={`/article/${a.id}`} className={styles.articleTitle}>{a.title}</Link>
                                         <span
-                                            className={styles.meta}>by {a.authorName} · {new Date(a.createdAt).toLocaleDateString()}</span>
+                                            className={styles.meta}>by {a.authorName} · {new Date(a.publishedTime).toLocaleDateString()}</span>
                                     </div>
                                     <div className={styles.rowActions}>
                                         <Button size="sm" onClick={() => approveArticle(a.id)}>通过</Button>

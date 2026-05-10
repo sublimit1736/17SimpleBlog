@@ -12,6 +12,8 @@ public record CommentResponse(
         @Schema(description = "评论 ID") Long id,
         @Schema(description = "所属文章 ID") Long articleId,
         @Schema(description = "作者用户 ID") Long authorId,
+        @Schema(description = "作者用户名") String authorName,
+        @Schema(description = "作者头像 URL") String authorAvatarUrl,
         @Schema(description = "父评论 ID，null 为顶层评论") Long parentCommentId,
         @Schema(description = "评论内容") String content,
         @Schema(description = "创建时间") LocalDateTime createTime,

@@ -45,6 +45,16 @@ client.interceptors.response.use(
     async (error: AxiosError) => {
         const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
+        if (error.response?.status === 403) {
+            window.location.href = '/forbidden';
+            return Promise.reject(error);
+        }
+
+        if (error.response?.status && error.response.status >= 500) {
+            window.location.href = '/error';
+            return Promise.reject(error);
+        }
+
         if (error.response?.status === 401 && !originalRequest._retry) {
             const refreshToken = useAuthStore.getState().refreshToken;
 

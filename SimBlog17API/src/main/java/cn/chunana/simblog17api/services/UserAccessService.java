@@ -19,6 +19,4 @@ public interface UserAccessService {
     boolean changePassword(Long userId, String oldPassword, String newPassword);
 
     PageResponse<UserAccessResponse> searchUsersByUsername(String keyword, Pageable pageable);
-
-    PageResponse<UserAccessResponse> searchUsersByUsernameRegex(String pattern, Pageable pageable);
 }

@@ -21,7 +21,6 @@ const WriteArticlePage: React.FC = () => {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [summary, setSummary] = useState('');
     const [tags, setTags] = useState('');
     const [contentType, setContentType] = useState<ContentType>('MARKDOWN');
     const [loading, setLoading] = useState(false);
@@ -35,9 +34,8 @@ const WriteArticlePage: React.FC = () => {
                 if (res.data.statusCode === 0) {
                     const article: Article = res.data.data;
                     setTitle(article.title);
-                    setContent(article.content);
-                    setSummary(article.summary || '');
-                    setTags((article.tags || []).join(', '));
+                    setContent(article.content ?? '');
+                    setTags(article.tags ?? '');
                     setContentType(article.contentType || 'MARKDOWN');
                 }
             } catch {
@@ -59,7 +57,7 @@ const WriteArticlePage: React.FC = () => {
         }
         setLoading(true);
         const tagArr = tags.split(',').map((t) => t.trim()).filter(Boolean);
-        const payload = {title: title.trim(), content, summary, tags: tagArr, contentType};
+        const payload = {title: title.trim(), content, tags: tagArr, contentType};
         try {
             let res;
             if (isEdit) {
@@ -121,17 +119,6 @@ const WriteArticlePage: React.FC = () => {
                                 onChange={(e) => setTags(e.target.value)}
                             />
                         </div>
-                    </div>
-
-                    <div className={styles.field}>
-                        <label className={styles.label}>摘要（可选）</label>
-                        <textarea
-                            className={styles.summaryArea}
-                            rows={2}
-                            placeholder="简短描述..."
-                            value={summary}
-                            onChange={(e) => setSummary(e.target.value)}
-                        />
                     </div>
 
                     <textarea

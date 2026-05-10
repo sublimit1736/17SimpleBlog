@@ -4,6 +4,7 @@ import cn.chunana.simblog17api.common.Status;
 import cn.chunana.simblog17api.dto.response.ApiStatusResponse;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -51,6 +52,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IllegalArgumentException.class)
     public ApiStatusResponse<String> handleIllegalArgumentException(IllegalArgumentException exception) {
         return ApiStatusResponse.fail(Status.INVALID_REQUEST, exception.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ApiStatusResponse<String> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
+        log.warn("Data integrity violation: {}", exception.getMessage());
+        return ApiStatusResponse.fail(Status.INVALID_REQUEST, "数据冲突，请检查是否存在重复数据");
     }
 
     private String formatFieldError(FieldError error) {

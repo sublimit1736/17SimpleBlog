@@ -13,12 +13,14 @@ import java.time.LocalDateTime;
 @Builder
 @Schema(description = "Article response with full content")
 public record ArticleResponse(
-        @Schema(description = "Article id", example = "1") Integer id,
+        @Schema(description = "Article id", example = "1") Long id,
         @Schema(description = "Article title", example = "My first article") String title,
         @Schema(description = "Article content") String content,
         @Schema(description = "Article content type", example = "MARKDOWN") String contentType,
         @Schema(description = "Article preview text") String preview,
         @Schema(description = "Author user id", example = "1001") Long authorId,
+        @Schema(description = "Author username") String authorName,
+        @Schema(description = "Author avatar URL") String authorAvatarUrl,
         @Schema(description = "Published time", example = "2026-04-11T11:00:00") LocalDateTime publishedTime,
         @Schema(description = "Last updated time", example = "2026-04-11T11:05:00") LocalDateTime updatedTime,
         @Schema(description = "View count", example = "256") Integer viewCount,

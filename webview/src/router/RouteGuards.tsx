@@ -11,6 +11,6 @@ export const RequireAdmin: React.FC = () => {
     const user = useAuthStore((s) => s.user);
     const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
     if (!isAuthenticated) return <Navigate to="/login" replace/>;
-    if (user?.role !== 'ADMIN') return <Navigate to="/" replace/>;
+    if (user?.role !== 'ADMIN') return <Navigate to="/forbidden" replace/>;
     return <Outlet/>;
 };

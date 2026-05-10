@@ -41,18 +41,18 @@ public class HomeServiceImpl implements HomeService {
     @Override
     @Cacheable(value = CacheNames.HOME_LATEST, key = CacheKeys.HOME_PAGEABLE)
     public PageResponse<ArticleMetaResponse> getLatestArticles(Pageable pageable) {
-        return PageResponse.from(
-                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PUBLISHED, pageable)
-                        .map(ArticleMapper::toArticleMetaResponse));
+        return ArticleMapper.toMetaPageResponse(
+                articleRepository.findByStatusOrderByPublishedTimeDesc(Article.STATUS_PUBLISHED, pageable),
+                userRepository);
     }
 
     @Override
     @Cacheable(value = CacheNames.HOME_HOT, key = CacheKeys.HOME_DAYS_PAGEABLE)
     public PageResponse<ArticleMetaResponse> getHotArticles(int days, Pageable pageable) {
         LocalDateTime since = LocalDateTime.now().minusDays(days);
-        return PageResponse.from(
-                articleRepository.findHotArticles(since, pageable)
-                        .map(ArticleMapper::toArticleMetaResponse));
+        return ArticleMapper.toMetaPageResponse(
+                articleRepository.findHotArticles(since, pageable),
+                userRepository);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class HomeServiceImpl implements HomeService {
     @Override
     @Cacheable(value = CacheNames.HOME_RECENT_COMMENTS, key = CacheKeys.HOME_PAGEABLE)
     public PageResponse<CommentResponse> getRecentComments(Pageable pageable) {
-        return PageResponse.from(
-                commentRepository.findByStatusOrderByCreateTimeDesc(Comment.STATUS_APPROVED, pageable)
-                        .map(CommentMapper::toCommentResponse));
+        return CommentMapper.toCommentPageResponse(
+                commentRepository.findByStatusOrderByCreateTimeDesc(Comment.STATUS_APPROVED, pageable),
+                userRepository);
     }
 }

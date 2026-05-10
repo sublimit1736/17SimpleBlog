@@ -7,23 +7,8 @@ import {metaApi} from '../api/meta';
 import {useToast} from '../components/ui/toastContext';
 import {usePageTitle} from '../hooks/usePageTitle';
 import {META_CONFIG_ENABLE} from '../config/siteEnv';
+import {sanitizeImageUrl} from '../utils/sanitizeImageUrl';
 import styles from './MetaConfigPage.module.css';
-
-/** Allow only safe image URL schemes to prevent XSS via javascript: or data: non-image URLs */
-function sanitizeImageUrl(url: string): string {
-    if (!url) return '';
-    const trimmed = url.trim();
-    const lower = trimmed.toLowerCase();
-    if (
-        lower.startsWith('https://') ||
-        lower.startsWith('http://') ||
-        lower.startsWith('/') ||
-        lower.startsWith('data:image/')
-    ) {
-        return trimmed;
-    }
-    return '';
-}
 
 /* ─────────────────────────────────────────────────────────
    Token-gate: a simple overlay asking for the owner token.
@@ -216,8 +201,9 @@ const MetaConfigContent: React.FC = () => {
     const [newTypingText, setNewTypingText] = useState('');
     const [newHeroImageUrl, setNewHeroImageUrl] = useState('');
 
-    // Pending save action guarded by token dialog
-    const [pendingSave, setPendingSave] = useState<(() => void) | null>(null);
+    // Pending save action guarded by token dialog.
+    // We wrap in { fn } to avoid React treating the function as a state updater.
+    const [pendingSave, setPendingSave] = useState<{fn: () => void} | null>(null);
 
     const faviconFileRef = useRef<HTMLInputElement>(null);
     const logoFileRef = useRef<HTMLInputElement>(null);
@@ -227,7 +213,7 @@ const MetaConfigContent: React.FC = () => {
 
     /** Wrap any save action with a token re-confirmation dialog. */
     const requireToken = (action: () => void) => {
-        setPendingSave(() => action);
+        setPendingSave({fn: action});
     };
 
     const uploadFile = async (file: File): Promise<string | null> => {
@@ -297,14 +283,20 @@ const MetaConfigContent: React.FC = () => {
 
     const handleSaveIcons = () => {
         requireToken(() => {
-            setConfig({faviconUrl: editFaviconUrl, logoIconUrl: editLogoUrl});
+            setConfig({
+                faviconUrl: sanitizeImageUrl(editFaviconUrl),
+                logoIconUrl: sanitizeImageUrl(editLogoUrl),
+            });
             showToast('图标设置已保存', 'success');
         });
     };
 
     const handleAddHeroImageByUrl = () => {
-        const url = newHeroImageUrl.trim();
-        if (!url) return;
+        const url = sanitizeImageUrl(newHeroImageUrl);
+        if (!url) {
+            showToast('请输入有效的图片 URL（https:// 或 /path/...）', 'warning');
+            return;
+        }
         addHeroImage(url);
         setNewHeroImageUrl('');
         showToast('背景图已添加', 'success');
@@ -326,8 +318,8 @@ const MetaConfigContent: React.FC = () => {
         requireToken(() => {
             setConfig({
                 bloggerName: editBloggerName.trim() || '博主',
-                bloggerAvatarUrl: editBloggerAvatar,
-                bloggerBgUrl: editBloggerBg,
+                bloggerAvatarUrl: sanitizeImageUrl(editBloggerAvatar),
+                bloggerBgUrl: sanitizeImageUrl(editBloggerBg),
             });
             showToast('博主卡片设置已保存', 'success');
         });
@@ -348,7 +340,7 @@ const MetaConfigContent: React.FC = () => {
             {pendingSave && (
                 <ConfirmTokenDialog
                     onConfirmed={() => {
-                        pendingSave();
+                        pendingSave.fn();
                         setPendingSave(null);
                     }}
                     onCancel={() => setPendingSave(null)}

@@ -3,6 +3,7 @@ import Avatar from '../ui/Avatar';
 import type { SiteStats } from '../../types';
 import { useNavigate } from 'react-router-dom';
 import { useSiteConfigStore } from '../../store/siteConfig';
+import { sanitizeImageUrl } from '../../utils/sanitizeImageUrl';
 import styles from './BloggerCard.module.css';
 
 interface BloggerCardProps {
@@ -14,14 +15,15 @@ const BloggerCard: React.FC<BloggerCardProps> = ({ stats }) => {
   const { bloggerName, bloggerAvatarUrl, bloggerBgUrl } = useSiteConfigStore();
 
   const name = bloggerName || '博主';
-  const coverStyle = bloggerBgUrl
-    ? { backgroundImage: `url(${bloggerBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+  const safeBgUrl = sanitizeImageUrl(bloggerBgUrl);
+  const coverStyle = safeBgUrl
+    ? { backgroundImage: `url(${safeBgUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
     : undefined;
 
   return (
     <div className={styles.card}>
       {/* Cover banner */}
-      <div className={`${styles.cover} ${bloggerBgUrl ? styles.coverPhoto : ''}`} style={coverStyle} />
+      <div className={`${styles.cover} ${safeBgUrl ? styles.coverPhoto : ''}`} style={coverStyle} />
 
       {/* Avatar overlapping cover */}
       <div className={styles.avatarWrap}>

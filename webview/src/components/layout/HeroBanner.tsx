@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSiteConfigStore } from '../../store/siteConfig';
 import { SITE_NAME } from '../../config/siteEnv';
+import { sanitizeImageUrl } from '../../utils/sanitizeImageUrl';
 import styles from './HeroBanner.module.css';
 
 const HeroBanner: React.FC = () => {
@@ -82,16 +83,17 @@ const HeroBanner: React.FC = () => {
   };
 
   const hasBgImages = heroImages && heroImages.length > 0;
-  const bgStyle = hasBgImages
+  const safeSlideUrl = hasBgImages ? sanitizeImageUrl(heroImages[slideIndex]) : '';
+  const bgStyle = safeSlideUrl
     ? {
-        backgroundImage: `url(${heroImages[slideIndex]})`,
+        backgroundImage: `url(${safeSlideUrl})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }
     : undefined;
 
   return (
-    <div id="hero-banner" className={`${styles.hero} ${hasBgImages ? styles.heroPhoto : ''}`} style={bgStyle}>
+    <div id="hero-banner" className={`${styles.hero} ${safeSlideUrl ? styles.heroPhoto : ''}`} style={bgStyle}>
       {/* overlay */}
       <div className={styles.overlay} />
 

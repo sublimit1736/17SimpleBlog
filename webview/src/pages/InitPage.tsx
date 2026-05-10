@@ -6,6 +6,22 @@ import {useToast} from '../components/ui/toastContext';
 import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './InitPage.module.css';
 
+/** Allow only safe image URL schemes to prevent XSS via javascript: or data: non-image URLs */
+function sanitizeImageUrl(url: string): string {
+    if (!url) return '';
+    const trimmed = url.trim();
+    const lower = trimmed.toLowerCase();
+    if (
+        lower.startsWith('https://') ||
+        lower.startsWith('http://') ||
+        lower.startsWith('/') ||
+        lower.startsWith('data:image/')
+    ) {
+        return trimmed;
+    }
+    return '';
+}
+
 const InitPage: React.FC = () => {
     usePageTitle('初始化配置');
 
@@ -156,7 +172,7 @@ const InitPage: React.FC = () => {
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>浏览器标签页图标（小图标）</label>
                                 {editFaviconUrl && (
-                                    <img src={editFaviconUrl} alt="favicon preview" className={styles.iconPreview} />
+                                    <img src={sanitizeImageUrl(editFaviconUrl)} alt="favicon preview" className={styles.iconPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -182,7 +198,7 @@ const InitPage: React.FC = () => {
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>顶栏图标（大图标）</label>
                                 {editLogoUrl && (
-                                    <img src={editLogoUrl} alt="logo preview" className={styles.logoPreview} />
+                                    <img src={sanitizeImageUrl(editLogoUrl)} alt="logo preview" className={styles.logoPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -216,7 +232,7 @@ const InitPage: React.FC = () => {
                         <div className={styles.imageGrid}>
                             {heroImages.map((url, i) => (
                                 <div key={i} className={styles.imageCard}>
-                                    <img src={url} alt={`hero-${i}`} className={styles.imageThumb} />
+                                    <img src={sanitizeImageUrl(url)} alt={`hero-${i}`} className={styles.imageThumb} />
                                     <button
                                         className={styles.removeBtn}
                                         onClick={() => removeHeroImage(i)}
@@ -284,7 +300,7 @@ const InitPage: React.FC = () => {
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>博主头像</label>
                                 {editBloggerAvatar && (
-                                    <img src={editBloggerAvatar} alt="avatar preview" className={styles.avatarPreview} />
+                                    <img src={sanitizeImageUrl(editBloggerAvatar)} alt="avatar preview" className={styles.avatarPreview} />
                                 )}
                                 <input
                                     className={styles.input}
@@ -310,7 +326,7 @@ const InitPage: React.FC = () => {
                             <div className={styles.fieldGroup}>
                                 <label className={styles.label}>博主卡片背景图</label>
                                 {editBloggerBg && (
-                                    <img src={editBloggerBg} alt="bg preview" className={styles.bgPreview} />
+                                    <img src={sanitizeImageUrl(editBloggerBg)} alt="bg preview" className={styles.bgPreview} />
                                 )}
                                 <input
                                     className={styles.input}

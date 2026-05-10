@@ -12,12 +12,15 @@ import BloggerCard from '../components/sidebar/BloggerCard';
 import SiteInfoCard from '../components/sidebar/SiteInfoCard';
 import {formatDistanceToNow} from 'date-fns';
 import {zhCN} from 'date-fns/locale';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './HomePage.module.css';
 
-type TabType = 'latest' | 'hot';
+type SortMode = 'latest' | 'hot';
 
 const HomePage: React.FC = () => {
-    const [tab, setTab] = useState<TabType>('latest');
+    usePageTitle('首页');
+
+    const [sort, setSort] = useState<SortMode>('latest');
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
@@ -47,7 +50,7 @@ const HomePage: React.FC = () => {
         const fetchArticles = async () => {
             setLoading(true);
             try {
-                const res = tab === 'latest'
+                const res = sort === 'latest'
                     ? await homeApi.getLatest(page, 10)
                     : await homeApi.getHot(7, page, 10);
                 if (res.data.statusCode === 0) {
@@ -60,10 +63,10 @@ const HomePage: React.FC = () => {
             }
         };
         fetchArticles();
-    }, [tab, page]);
+    }, [sort, page]);
 
-    const handleTabChange = (t: TabType) => {
-        setTab(t);
+    const handleSortToggle = () => {
+        setSort((prev) => (prev === 'latest' ? 'hot' : 'latest'));
         setPage(0);
     };
 
@@ -73,18 +76,32 @@ const HomePage: React.FC = () => {
             <div className="container">
                 <div className="page-layout">
                     <div className="page-main">
-                        <div className={styles.tabs}>
+                        <div className={styles.articleBoxHeader}>
+                            <span className={styles.articleBoxTitle}>
+                                {sort === 'latest' ? '最新文章' : '热门文章'}
+                            </span>
                             <button
-                                className={`${styles.tab} ${tab === 'latest' ? styles.active : ''}`}
-                                onClick={() => handleTabChange('latest')}
+                                className={styles.sortToggleBtn}
+                                onClick={handleSortToggle}
+                                title={sort === 'latest' ? '切换为热度排序' : '切换为时间排序'}
                             >
-                                🆕 最新文章
-                            </button>
-                            <button
-                                className={`${styles.tab} ${tab === 'hot' ? styles.active : ''}`}
-                                onClick={() => handleTabChange('hot')}
-                            >
-                                🔥 热门文章
+                                {sort === 'latest' ? (
+                                    <>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="13" height="13">
+                                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                            <polyline points="17 6 23 6 23 12" />
+                                        </svg>
+                                        热度
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="13" height="13">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <polyline points="12 6 12 12 16 14" />
+                                        </svg>
+                                        最新
+                                    </>
+                                )}
                             </button>
                         </div>
 
@@ -102,7 +119,7 @@ const HomePage: React.FC = () => {
                         {/* Hot Tags */}
                         {hotTags.length > 0 && (
                             <div className="card">
-                                <h3 className={styles.sideTitle}>🏷 热门标签</h3>
+                                <h3 className={styles.sideTitle}>热门标签</h3>
                                 <div className={styles.tagCloud}>
                                     {hotTags.map((ht) => (
                                         <Tag
@@ -118,7 +135,7 @@ const HomePage: React.FC = () => {
                         {/* Recent Comments */}
                         {recentComments.length > 0 && (
                             <div className="card">
-                                <h3 className={styles.sideTitle}>💬 最新评论</h3>
+                                <h3 className={styles.sideTitle}>最新评论</h3>
                                 <div className={styles.commentList}>
                                     {recentComments.map((c) => (
                                         <div key={c.id} className={styles.commentItem}>

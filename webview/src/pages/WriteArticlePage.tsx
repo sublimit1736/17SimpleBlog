@@ -5,6 +5,7 @@ import {type Article, type ContentType} from '../types';
 import {useToast} from '../components/ui/toastContext';
 import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './WriteArticlePage.module.css';
 
 const CONTENT_TYPES: { value: ContentType; label: string }[] = [
@@ -18,6 +19,8 @@ const WriteArticlePage: React.FC = () => {
     const isEdit = Boolean(id);
     const navigate = useNavigate();
     const {showToast} = useToast();
+
+    usePageTitle(isEdit ? '编辑文章' : '写文章');
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');

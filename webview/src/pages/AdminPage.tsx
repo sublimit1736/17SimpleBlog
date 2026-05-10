@@ -6,11 +6,14 @@ import Layout from '../components/layout/Layout';
 import Button from '../components/ui/Button';
 import {Loading} from '../components/ui/Loading';
 import {Link} from 'react-router-dom';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './AdminPage.module.css';
 
 type AdminTab = 'pending' | 'comments' | 'users';
 
 const AdminPage: React.FC = () => {
+    usePageTitle('管理后台');
+
     const [tab, setTab] = useState<AdminTab>('pending');
     const [pending, setPending] = useState<Article[]>([]);
     const [comments, setComments] = useState<Comment[]>([]);

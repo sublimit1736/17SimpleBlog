@@ -18,6 +18,10 @@
   position: relative;
 }
 
+.coverPhoto {
+  background: none;
+}
+
 /* avatar ring positioned at bottom of cover */
 .avatarWrap {
   display: flex;

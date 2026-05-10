@@ -12,6 +12,7 @@ import Button from '../components/ui/Button';
 import {Loading} from '../components/ui/Loading';
 import {format, formatDistanceToNow} from 'date-fns';
 import {zhCN} from 'date-fns/locale';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './ArticleDetailPage.module.css';
 
 const ArticleDetailPage: React.FC = () => {
@@ -32,6 +33,8 @@ const ArticleDetailPage: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
 
     const articleId = Number(id);
+
+    usePageTitle('文章');
 
     const fetchArticle = useCallback(async () => {
         if (!id) return;
@@ -298,9 +301,9 @@ const ArticleDetailPage: React.FC = () => {
                             {article.authorName || '未知用户'}
                         </Link>
                         <span className={styles.heroMetaSep}>·</span>
-                        <span>📅 {timeStr}</span>
+                        <span>{timeStr}</span>
                         <span className={styles.heroMetaSep}>·</span>
-                        <span>👁 {article.viewCount}</span>
+                        <span>{article.viewCount} 次浏览</span>
                     </div>
                     {canEdit && (
                         <div className={styles.heroActions}>
@@ -308,13 +311,13 @@ const ArticleDetailPage: React.FC = () => {
                                 className={styles.heroActionBtn}
                                 onClick={() => navigate(`/edit/${article.id}`)}
                             >
-                                ✏ 编辑
+                                编辑
                             </button>
                             <button
                                 className={`${styles.heroActionBtn} ${styles.heroActionDanger}`}
                                 onClick={handleDeleteArticle}
                             >
-                                🗑 删除
+                                删除
                             </button>
                         </div>
                     )}
@@ -350,7 +353,7 @@ const ArticleDetailPage: React.FC = () => {
 
                     {/* Comments */}
                     <div className={styles.commentsSection}>
-                        <h2 className={styles.commentsTitle}>💬 评论 ({comments.length})</h2>
+                        <h2 className={styles.commentsTitle}>评论 ({comments.length})</h2>
 
                         {isAuthenticated ? (
                             <form onSubmit={handleComment} className={styles.commentForm}>

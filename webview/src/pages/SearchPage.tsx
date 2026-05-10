@@ -6,11 +6,14 @@ import type {Article, User} from '../types';
 import Layout from '../components/layout/Layout';
 import ArticleList from '../components/article/ArticleList';
 import Avatar from '../components/ui/Avatar';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './SearchPage.module.css';
 
 type SearchType = 'articles' | 'users';
 
 const SearchPage: React.FC = () => {
+    usePageTitle('搜索');
+
     const [searchParams, setSearchParams] = useSearchParams();
     const queryParam = searchParams.get('q') || '';
     const typeParam = (searchParams.get('type') as SearchType) || 'articles';
@@ -85,7 +88,7 @@ const SearchPage: React.FC = () => {
                         onChange={(e) => setQ(e.target.value)}
                         autoFocus
                     />
-                    <button className={styles.searchBtn} type="submit">🔍 搜索</button>
+                    <button className={styles.searchBtn} type="submit">搜索</button>
                 </form>
 
                 <div className={styles.typeSwitch}>
@@ -93,13 +96,13 @@ const SearchPage: React.FC = () => {
                         className={`${styles.typeBtn} ${type === 'articles' ? styles.typeActive : ''}`}
                         onClick={() => switchType('articles')}
                     >
-                        📄 文章
+                        文章
                     </button>
                     <button
                         className={`${styles.typeBtn} ${type === 'users' ? styles.typeActive : ''}`}
                         onClick={() => switchType('users')}
                     >
-                        👤 用户
+                        用户
                     </button>
                 </div>
 
@@ -116,7 +119,6 @@ const SearchPage: React.FC = () => {
                             <div className={styles.userList}>
                                 {users.length === 0 ? (
                                     <div className="empty-state">
-                                        <div className="empty-icon">👤</div>
                                         <p>没有找到用户</p>
                                     </div>
                                 ) : (
@@ -126,7 +128,7 @@ const SearchPage: React.FC = () => {
                                             <div>
                                                 <div className={styles.userUsername}>{u.username}</div>
                                                 <div className={styles.userRole}>
-                                                    {u.role === 'ADMIN' ? '🛡 管理员' : '👤 普通用户'}
+                                                    {u.role === 'ADMIN' ? '管理员' : '普通用户'}
                                                 </div>
                                             </div>
                                         </Link>
@@ -139,7 +141,6 @@ const SearchPage: React.FC = () => {
 
                 {!searched && (
                     <div className="empty-state">
-                        <div className="empty-icon">🔍</div>
                         <p>输入关键词开始搜索</p>
                     </div>
                 )}

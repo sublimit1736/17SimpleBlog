@@ -4,9 +4,12 @@ import type {Article} from '../types';
 import Layout from '../components/layout/Layout';
 import ArticleList from '../components/article/ArticleList';
 import Pagination from '../components/ui/Pagination';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './ArticleListPage.module.css';
 
 const ArticleListPage: React.FC = () => {
+    usePageTitle('文章列表');
+
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(0);
@@ -36,7 +39,7 @@ const ArticleListPage: React.FC = () => {
             <div className="container">
                 <div className={styles.header}>
                     <div className={styles.titleGroup}>
-                        <h1 className={styles.title}>📄 所有文章</h1>
+                        <h1 className={styles.title}>所有文章</h1>
                         {!loading && <span className={styles.count}>共 {totalElements} 篇</span>}
                     </div>
                 </div>

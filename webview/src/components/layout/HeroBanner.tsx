@@ -1,31 +1,49 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useSiteConfigStore } from '../../store/siteConfig';
 import styles from './HeroBanner.module.css';
 
-const TYPING_STRINGS = [
-  '分享技术，记录生活',
-  '在这里找到你感兴趣的内容',
-  'Share ideas, explore the world',
-];
-
 const HeroBanner: React.FC = () => {
+  const { heroImages, heroSlideInterval, typingTexts } = useSiteConfigStore();
+
   const typingRef = useRef<HTMLSpanElement>(null);
   const indexRef = useRef(0);
   const charRef = useRef(0);
   const deletingRef = useRef(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Slideshow state
+  const [slideIndex, setSlideIndex] = useState(0);
+
+  // Pick the text pool: fallback to defaults if config has none
+  const texts =
+    typingTexts && typingTexts.length > 0
+      ? typingTexts
+      : ['分享技术，记录生活', '在这里找到你感兴趣的内容', 'Share ideas, explore the world'];
+
+  // Re-start typing when text pool changes
+  const textsKey = texts.join('|');
+
   useEffect(() => {
     const el = typingRef.current;
     if (!el) return;
 
+    indexRef.current = 0;
+    charRef.current = 0;
+    deletingRef.current = false;
+    el.textContent = '';
+
     const tick = () => {
-      const str = TYPING_STRINGS[indexRef.current];
+      const currentTexts = texts;
+      const str = currentTexts[indexRef.current % currentTexts.length];
+      // Dynamic display pause: longer text → longer pause
+      const displayPause = Math.max(1200, str.length * 60);
+
       if (!deletingRef.current) {
         charRef.current++;
         el.textContent = str.substring(0, charRef.current);
         if (charRef.current === str.length) {
           deletingRef.current = true;
-          timerRef.current = setTimeout(tick, 1800);
+          timerRef.current = setTimeout(tick, displayPause);
           return;
         }
       } else {
@@ -33,15 +51,27 @@ const HeroBanner: React.FC = () => {
         el.textContent = str.substring(0, charRef.current);
         if (charRef.current === 0) {
           deletingRef.current = false;
-          indexRef.current = (indexRef.current + 1) % TYPING_STRINGS.length;
+          indexRef.current = (indexRef.current + 1) % currentTexts.length;
         }
       }
-      timerRef.current = setTimeout(tick, deletingRef.current ? 50 : 90);
+      timerRef.current = setTimeout(tick, deletingRef.current ? 40 : 85);
     };
 
     timerRef.current = setTimeout(tick, 600);
-    return () => { if (timerRef.current) clearTimeout(timerRef.current); };
-  }, []);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [textsKey]);
+
+  // Slideshow effect
+  useEffect(() => {
+    if (!heroImages || heroImages.length < 2) return;
+    const id = setInterval(() => {
+      setSlideIndex((prev) => (prev + 1) % heroImages.length);
+    }, heroSlideInterval || 5000);
+    return () => clearInterval(id);
+  }, [heroImages, heroSlideInterval]);
 
   const handleScrollDown = () => {
     const heroEl = document.getElementById('hero-banner');
@@ -50,15 +80,23 @@ const HeroBanner: React.FC = () => {
     }
   };
 
+  const hasBgImages = heroImages && heroImages.length > 0;
+  const bgStyle = hasBgImages
+    ? {
+        backgroundImage: `url(${heroImages[slideIndex]})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }
+    : undefined;
+
   return (
-    <div id="hero-banner" className={styles.hero}>
-      {/* gradient overlay */}
+    <div id="hero-banner" className={`${styles.hero} ${hasBgImages ? styles.heroPhoto : ''}`} style={bgStyle}>
+      {/* overlay */}
       <div className={styles.overlay} />
 
       {/* center content */}
       <div className={styles.center}>
-        <div className={styles.logoIcon}>✦</div>
-        <h1 className={styles.title}>17SimpleBlog</h1>
+        <h1 className={styles.title}>Chunana的个人博客</h1>
         <p className={styles.subtitle}>
           <span ref={typingRef} />
           <span className={styles.cursor}>|</span>

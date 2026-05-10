@@ -4,9 +4,12 @@ import {authApi} from '../api/auth';
 import {useToast} from '../components/ui/toastContext';
 import Button from '../components/ui/Button';
 import Layout from '../components/layout/Layout';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './AuthPage.module.css';
 
 const RegisterPage: React.FC = () => {
+    usePageTitle('注册');
+
     const navigate = useNavigate();
     const {showToast} = useToast();
     const [username, setUsername] = useState('');
@@ -51,7 +54,7 @@ const RegisterPage: React.FC = () => {
                 <div className={styles.card}>
                     <div className={styles.brand}>
                         <span className={styles.brandIcon}>✦</span>
-                        <h1 className={styles.brandName}>17SimpleBlog</h1>
+                        <h1 className={styles.brandName}>Chunana的个人博客</h1>
                     </div>
                     <h2 className={styles.heading}>创建账号</h2>
                     <p className={styles.sub}>加入我们，开始你的写作之旅</p>

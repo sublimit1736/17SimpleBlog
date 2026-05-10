@@ -7,9 +7,12 @@ import Button from '../components/ui/Button';
 import {Loading} from '../components/ui/Loading';
 import {formatDistanceToNow} from 'date-fns';
 import {zhCN} from 'date-fns/locale';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './NotificationsPage.module.css';
 
 const NotificationsPage: React.FC = () => {
+    usePageTitle('通知');
+
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
     const {showToast} = useToast();

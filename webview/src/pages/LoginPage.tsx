@@ -5,9 +5,12 @@ import {useAuthStore} from '../store/auth';
 import {useToast} from '../components/ui/toastContext';
 import Button from '../components/ui/Button';
 import Layout from '../components/layout/Layout';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './AuthPage.module.css';
 
 const LoginPage: React.FC = () => {
+    usePageTitle('登录');
+
     const navigate = useNavigate();
     const login = useAuthStore((s) => s.login);
     const {showToast} = useToast();
@@ -50,7 +53,7 @@ const LoginPage: React.FC = () => {
                 <div className={styles.card}>
                     <div className={styles.brand}>
                         <span className={styles.brandIcon}>✦</span>
-                        <h1 className={styles.brandName}>17SimpleBlog</h1>
+                        <h1 className={styles.brandName}>Chunana的个人博客</h1>
                     </div>
                     <h2 className={styles.heading}>登录账号</h2>
                     <p className={styles.sub}>欢迎回来！请登录你的账号</p>

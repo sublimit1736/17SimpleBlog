@@ -15,9 +15,10 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  transition: background-image 0.8s ease;
 }
 
-/* subtle animated background pattern */
+/* subtle animated background pattern — hidden when photo bg is active */
 .hero::before {
   content: '';
   position: absolute;
@@ -27,6 +28,12 @@
     radial-gradient(circle at 80% 70%, rgba(168, 85, 247, 0.3) 0%, transparent 50%),
     radial-gradient(circle at 55% 20%, rgba(59, 130, 246, 0.2) 0%, transparent 40%);
   animation: auroraShift 8s ease-in-out infinite alternate;
+  transition: opacity 0.8s ease;
+}
+
+.heroPhoto::before {
+  opacity: 0;
+  animation: none;
 }
 
 @keyframes auroraShift {
@@ -37,7 +44,7 @@
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.12);
+  background: rgba(0, 0, 0, 0.38);
   z-index: 1;
 }
 
@@ -52,16 +59,6 @@
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
-}
-
-.logoIcon {
-  font-size: 3rem;
-  background: linear-gradient(135deg, #a5b4fc, #e879f9);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 12px;
-  display: inline-block;
 }
 
 .title {

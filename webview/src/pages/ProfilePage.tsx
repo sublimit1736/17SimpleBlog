@@ -12,11 +12,14 @@ import Avatar from '../components/ui/Avatar';
 import Button from '../components/ui/Button';
 import Modal from '../components/ui/Modal';
 import {Loading} from '../components/ui/Loading';
+import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './ProfilePage.module.css';
 
 type ProfileTab = 'articles' | 'likes' | 'favorites' | 'drafts';
 
 const ProfilePage: React.FC = () => {
+    usePageTitle('个人主页');
+
     const {uid} = useParams<{ uid: string }>();
     const userId = Number(uid);
     const {user: currentUser, isAuthenticated, setUser} = useAuthStore();

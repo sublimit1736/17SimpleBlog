@@ -14,6 +14,7 @@ import SearchPage from './pages/SearchPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ForbiddenPage from './pages/ForbiddenPage';
 import ServerErrorPage from './pages/ServerErrorPage';
+import InitPage from './pages/InitPage';
 
 const router = createBrowserRouter([
     {path: '/', element: <HomePage/>},
@@ -25,6 +26,7 @@ const router = createBrowserRouter([
     {path: '/search', element: <SearchPage/>},
     {path: '/forbidden', element: <ForbiddenPage/>},
     {path: '/error', element: <ServerErrorPage/>},
+    {path: '/initpage', element: <InitPage/>},
     {
         element: <RequireAuth/>,
         children: [

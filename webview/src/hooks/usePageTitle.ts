@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
-
-const SITE_NAME = 'Chunana的个人博客';
+import { SITE_NAME } from '../config/siteEnv';
 
 export function usePageTitle(subtitle: string) {
     useEffect(() => {

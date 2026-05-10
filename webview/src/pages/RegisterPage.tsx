@@ -5,6 +5,7 @@ import {useToast} from '../components/ui/toastContext';
 import Button from '../components/ui/Button';
 import Layout from '../components/layout/Layout';
 import {usePageTitle} from '../hooks/usePageTitle';
+import {SITE_NAME} from '../config/siteEnv';
 import styles from './AuthPage.module.css';
 
 const RegisterPage: React.FC = () => {
@@ -54,7 +55,7 @@ const RegisterPage: React.FC = () => {
                 <div className={styles.card}>
                     <div className={styles.brand}>
                         <span className={styles.brandIcon}>✦</span>
-                        <h1 className={styles.brandName}>Chunana的个人博客</h1>
+                        <h1 className={styles.brandName}>{SITE_NAME}</h1>
                     </div>
                     <h2 className={styles.heading}>创建账号</h2>
                     <p className={styles.sub}>加入我们，开始你的写作之旅</p>

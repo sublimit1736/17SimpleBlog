@@ -27,7 +27,10 @@ public enum Status {
     ARTICLE_NOT_FOUND(3001, "Article Not Found"),
 
     // Comments
-    COMMENT_NOT_FOUND(4001, "Comment Not Found");
+    COMMENT_NOT_FOUND(4001, "Comment Not Found"),
+
+    // MetaConfig
+    OWNER_TOKEN_INVALID(5001, "Owner Token Invalid");
 
     private final int    code;
     private final String message;

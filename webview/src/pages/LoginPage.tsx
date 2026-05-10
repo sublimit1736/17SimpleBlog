@@ -6,6 +6,7 @@ import {useToast} from '../components/ui/toastContext';
 import Button from '../components/ui/Button';
 import Layout from '../components/layout/Layout';
 import {usePageTitle} from '../hooks/usePageTitle';
+import {SITE_NAME} from '../config/siteEnv';
 import styles from './AuthPage.module.css';
 
 const LoginPage: React.FC = () => {
@@ -53,7 +54,7 @@ const LoginPage: React.FC = () => {
                 <div className={styles.card}>
                     <div className={styles.brand}>
                         <span className={styles.brandIcon}>✦</span>
-                        <h1 className={styles.brandName}>Chunana的个人博客</h1>
+                        <h1 className={styles.brandName}>{SITE_NAME}</h1>
                     </div>
                     <h2 className={styles.heading}>登录账号</h2>
                     <p className={styles.sub}>欢迎回来！请登录你的账号</p>

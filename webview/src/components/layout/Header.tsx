@@ -6,6 +6,7 @@ import {useSiteConfigStore} from '../../store/siteConfig';
 import {authApi} from '../../api/auth';
 import Avatar from '../ui/Avatar';
 import {useToast} from '../ui/toastContext';
+import {SITE_NAME} from '../../config/siteEnv';
 import styles from './Header.module.css';
 
 const Header: React.FC = () => {
@@ -68,7 +69,7 @@ const Header: React.FC = () => {
             ) : (
               <span className={styles.logoIcon}>✦</span>
             )}
-            <span className={styles.logoText}>Chunana的个人博客</span>
+            <span className={styles.logoText}>{SITE_NAME}</span>
           </Link>
           <nav className={`${styles.nav} ${menuOpen ? styles.navOpen : ''}`}>
             <Link to="/" className={styles.navLink} onClick={() => setMenuOpen(false)}>首页</Link>

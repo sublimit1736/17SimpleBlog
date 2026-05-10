@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useSiteConfigStore } from '../../store/siteConfig';
+import { SITE_NAME } from '../../config/siteEnv';
 import styles from './HeroBanner.module.css';
 
 const HeroBanner: React.FC = () => {
@@ -96,7 +97,7 @@ const HeroBanner: React.FC = () => {
 
       {/* center content */}
       <div className={styles.center}>
-        <h1 className={styles.title}>Chunana的个人博客</h1>
+        <h1 className={styles.title}>{SITE_NAME}</h1>
         <p className={styles.subtitle}>
           <span ref={typingRef} />
           <span className={styles.cursor}>|</span>

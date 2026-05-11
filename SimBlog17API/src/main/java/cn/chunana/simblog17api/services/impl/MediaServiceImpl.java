@@ -115,6 +115,8 @@ public class MediaServiceImpl implements MediaService {
             throw new IllegalStateException("Failed to create article media directory", exception);
         }
     }
+
+    private MediaUploadResponse toMediaUploadResponse(MediaAsset mediaAsset) {
         return MediaUploadResponse.builder()
                                   .id(mediaAsset.getId())
                                   .url(mediaAsset.getFileUrl())

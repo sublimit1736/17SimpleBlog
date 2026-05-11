@@ -10,7 +10,7 @@ import cn.chunana.simblog17api.entities.User;
 import cn.chunana.simblog17api.mapper.ArticleMapper;
 import cn.chunana.simblog17api.repository.UserRepository;
 import cn.chunana.simblog17api.services.ArticleService;
-import cn.chunana.simblog17api.utils.SecurityUtils;
+import cn.chunana.simblog17api.services.MetaConfigService;import cn.chunana.simblog17api.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
@@ -38,8 +38,9 @@ import java.util.Optional;
 @Slf4j
 public class ArticleCtrl {
 
-    private final ArticleService   articleService;
-    private final UserRepository   userRepository;
+    private final ArticleService    articleService;
+    private final UserRepository    userRepository;
+    private final MetaConfigService metaConfigService;
 
     /**
      * Upload a new article from a plain-text or Markdown file, plus optional image files.
@@ -73,6 +74,15 @@ public class ArticleCtrl {
         Long currentUserId = SecurityUtils.getCurrentUserId(authentication);
         if (currentUserId == null) {
             return ApiStatusResponse.fail(Status.UNAUTHORIZED);
+        }
+
+        // Check upload permission (role-level switch + per-user blacklist)
+        User.UserRole userRole = userRepository.findById(currentUserId)
+                .map(User::getRole)
+                .orElse(User.UserRole.USER);
+        if (!metaConfigService.canUserUpload(currentUserId, userRole)) {
+            log.warn("article.upload.forbidden userId={}", currentUserId);
+            return ApiStatusResponse.fail(Status.ACCESS_DENIED);
         }
 
         if (contentFile == null || contentFile.isEmpty()) {

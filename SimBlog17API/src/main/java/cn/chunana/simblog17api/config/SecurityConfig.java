@@ -69,7 +69,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.GET, "/api/media/files/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/articles/*/image/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, "/api/meta/verify-token").permitAll()
+                    .requestMatchers("/api/meta/**").permitAll()
                     .anyRequest().authenticated());
         } else {
             http.authorizeHttpRequests(auth -> auth

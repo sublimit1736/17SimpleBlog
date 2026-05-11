@@ -17,29 +17,15 @@ export const articlesApi = {
     searchByTags: (keyword: string, page = 0, size = 10) =>
         client.get<ApiResponse<PageResponse<Article>>>('/articles/search/by_tags', {params: {keyword, page, size}}),
 
-    getDrafts: (uid: number, page = 0, size = 10) =>
-        client.get<ApiResponse<PageResponse<Article>>>(`/articles/profile/${uid}/drafts`, {params: {page, size}}),
-
-    updateDraft: (id: number, data: Partial<Article>) =>
-        client.put<ApiResponse<Article>>(`/articles/draft/${id}`, data),
-
-    saveDraft: (data: { title: string; content: string; summary?: string; contentType: string; tags: string[] }) =>
-        client.post<ApiResponse<Article>>('/articles/draft', data),
-
-    publishNew: (data: { title: string; content: string; summary?: string; contentType: string; tags: string[] }) =>
-        client.post<ApiResponse<Article>>('/articles/new', data),
-
-    publishDraft: (id: number) =>
-        client.post<ApiResponse<Article>>(`/articles/draft/${id}/publish`),
-
-    update: (id: number, data: Partial<Article>) =>
-        client.put<ApiResponse<Article>>(`/articles/update/${id}`, data),
-
-    hide: (id: number) =>
-        client.put<ApiResponse<void>>(`/articles/hide/${id}`),
-
-    publish: (id: number) =>
-        client.put<ApiResponse<void>>(`/articles/publish/${id}`),
+    /**
+     * Upload a new article from a multipart FormData.
+     * Required fields: title, contentType, content (File).
+     * Optional fields: tags (string), images (File[]).
+     */
+    upload: (formData: FormData) =>
+        client.post<ApiResponse<Article>>('/articles/upload', formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+        }),
 
     delete: (id: number) =>
         client.delete<ApiResponse<void>>(`/articles/delete/${id}`),

@@ -67,6 +67,7 @@ public class SecurityConfig {
                     .requestMatchers(HttpMethod.POST, "/api/user/auth/login", "/api/user/auth/register", "/api/user/auth/refresh").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/user/auth/profile/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/media/files/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "/api/articles/*/image/**").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/public/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/meta/verify-token").permitAll()
                     .anyRequest().authenticated());

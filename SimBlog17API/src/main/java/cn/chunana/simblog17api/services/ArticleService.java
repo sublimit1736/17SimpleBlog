@@ -1,28 +1,25 @@
 package cn.chunana.simblog17api.services;
 
-import cn.chunana.simblog17api.dto.request.ArticleRequest;
 import cn.chunana.simblog17api.dto.response.ArticleMetaResponse;
 import cn.chunana.simblog17api.dto.response.ArticleResponse;
 import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.entities.Article;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ArticleService {
-    Article createArticle(ArticleRequest articleRequest);
 
-    Article createDraft(ArticleRequest articleRequest);
-
-    Optional<Article> hideArticle(Long id);
-
-    Optional<Article> publishArticle(Long id);
-
-    Optional<Article> publishDraft(Long id);
-
-    Optional<Article> updateArticle(Long id, ArticleRequest articleRequest);
-
-    Optional<Article> updateDraft(Long id, ArticleRequest articleRequest);
+    /**
+     * Create and immediately publish an article from an uploaded content file and optional image files.
+     * Image files are stored in the article's own namespace and any relative filename references
+     * inside the content are rewritten to the scoped serving URL automatically.
+     */
+    Article uploadArticle(String title, String tags, String contentType,
+                          MultipartFile contentFile, List<MultipartFile> imageFiles,
+                          Long authorId);
 
     Optional<Article> deleteArticle(Long id);
 
@@ -32,16 +29,10 @@ public interface ArticleService {
 
     PageResponse<ArticleResponse> getArticlesByAuthorId(Long authorId, Pageable pageable);
 
-    PageResponse<ArticleResponse> getDraftArticlesByAuthorId(Long authorId, Pageable pageable);
+    PageResponse<ArticleMetaResponse> searchArticlesByTitle(String key, Pageable pageable);
 
-    PageResponse<ArticleMetaResponse> getPendingArticles(Pageable pageable);
-
-    Optional<Article> moderateArticleStatus(Long id, Integer status);
-
-    PageResponse<ArticleResponse> searchArticlesByTitle(String key, Pageable pageable);
-
-    PageResponse<ArticleResponse> searchArticlesByTag(String key, Pageable pageable);
+    PageResponse<ArticleMetaResponse> searchArticlesByTag(String key, Pageable pageable);
 
     void increaseViewCountsAsync(Long id);
-
 }
+

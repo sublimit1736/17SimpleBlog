@@ -45,7 +45,7 @@ export const ArticleStatus = {
 } as const;
 export type ArticleStatusValue = typeof ArticleStatus[keyof typeof ArticleStatus];
 
-export type ContentType = 'PLAIN_TEXT' | 'MARKDOWN' | 'HTML';
+export type ContentType = 'PLAIN_TEXT' | 'MARKDOWN';
 
 export interface Article {
     id: number;

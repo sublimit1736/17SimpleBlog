@@ -1,20 +1,16 @@
 package cn.chunana.simblog17api.controller;
 
 import cn.chunana.simblog17api.common.Status;
-import cn.chunana.simblog17api.dto.request.AdminArticleStatusRequest;
 import cn.chunana.simblog17api.dto.request.AdminCommentStatusRequest;
 import cn.chunana.simblog17api.dto.response.ApiStatusResponse;
-import cn.chunana.simblog17api.dto.response.ArticleMetaResponse;
 import cn.chunana.simblog17api.dto.response.CommentResponse;
 import cn.chunana.simblog17api.dto.response.PageResponse;
 import cn.chunana.simblog17api.dto.response.UserAccessResponse;
 import cn.chunana.simblog17api.entities.User;
-import cn.chunana.simblog17api.mapper.ArticleMapper;
 import cn.chunana.simblog17api.mapper.CommentMapper;
 import cn.chunana.simblog17api.mapper.UserAccessMapper;
 import cn.chunana.simblog17api.repository.CommentRepository;
 import cn.chunana.simblog17api.repository.UserRepository;
-import cn.chunana.simblog17api.services.ArticleService;
 import cn.chunana.simblog17api.services.CommentService;
 import cn.chunana.simblog17api.services.impl.MediaCleanupService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,9 +31,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AdminCtrl {
 
-    private final UserRepository userRepository;
-    private final ArticleService articleService;
-    private final CommentService commentService;
+    private final UserRepository    userRepository;
+    private final CommentService    commentService;
     private final CommentRepository commentRepository;
     private final MediaCleanupService mediaCleanupService;
 
@@ -65,34 +60,6 @@ public class AdminCtrl {
                                  return ApiStatusResponse.ok(UserAccessMapper.toUserAccessResponse(user));
                              })
                              .orElseGet(() -> ApiStatusResponse.fail(Status.USER_NOT_FOUND));
-    }
-
-    @GetMapping("/articles/pending")
-    @Operation(summary = "待审核文章列表")
-    public ApiStatusResponse<PageResponse<ArticleMetaResponse>> getPendingArticles(
-            @PageableDefault(size = 10, sort = "publishedTime") Pageable pageable) {
-
-        return ApiStatusResponse.ok(articleService.getPendingArticles(pageable));
-    }
-
-    @PutMapping("/articles/{id}/status")
-    @Operation(summary = "更新文章状态")
-    public ApiStatusResponse<ArticleMetaResponse> moderateArticleStatus(
-            @PathVariable Long id,
-            @Valid @RequestBody AdminArticleStatusRequest request) {
-
-        return articleService.moderateArticleStatus(id, request.status())
-                             .map(article -> {
-                                 cn.chunana.simblog17api.entities.User author = article.getAuthorId() != null
-                                         ? userRepository.findById(article.getAuthorId()).orElse(null)
-                                         : null;
-                                 ArticleMetaResponse meta = ArticleMapper.toArticleMetaResponse(article,
-                                         author != null ? author.getUsername() : null,
-                                         author != null ? author.getAvatarUrl() : null);
-                                 log.info("admin.article.status_update articleId={} status={}", id, request.status());
-                                 return ApiStatusResponse.ok(meta);
-                             })
-                             .orElseGet(() -> ApiStatusResponse.fail(Status.ARTICLE_NOT_FOUND));
     }
 
     @GetMapping("/comments")

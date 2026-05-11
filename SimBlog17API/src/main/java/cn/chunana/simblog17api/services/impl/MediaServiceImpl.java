@@ -73,7 +73,43 @@ public class MediaServiceImpl implements MediaService {
         return uploaded;
     }
 
-    private MediaUploadResponse toMediaUploadResponse(MediaAsset mediaAsset) {
+    @Override
+    public MediaUploadResponse uploadArticleImage(MultipartFile file, Long articleId, Long uploaderId) {
+        validateImage(file);
+
+        Path   articleDir     = ensureArticleDirectory(articleId);
+        String storedFileName = buildStoredFileName(file.getOriginalFilename());
+        Path   target         = articleDir.resolve(storedFileName);
+
+        copyFile(file, target);
+
+        String fileUrl = "/api/articles/" + articleId + "/image/" + storedFileName;
+
+        MediaAsset mediaAsset = mediaAssetRepository.save(
+                MediaAsset.builder()
+                          .uploaderId(uploaderId)
+                          .articleId(articleId)
+                          .originalFileName(safeOriginalName(file.getOriginalFilename()))
+                          .storedFileName(storedFileName)
+                          .contentType(file.getContentType())
+                          .sizeBytes(file.getSize())
+                          .fileUrl(fileUrl)
+                          .build());
+
+        return toMediaUploadResponse(mediaAsset);
+    }
+
+    private Path ensureArticleDirectory(Long articleId) {
+        try {
+            Path root       = Path.of(storagePath).toAbsolutePath().normalize();
+            Path articleDir = root.resolve("articles").resolve(String.valueOf(articleId));
+            Files.createDirectories(articleDir);
+            return articleDir;
+        }
+        catch (IOException exception) {
+            throw new IllegalStateException("Failed to create article media directory", exception);
+        }
+    }
         return MediaUploadResponse.builder()
                                   .id(mediaAsset.getId())
                                   .url(mediaAsset.getFileUrl())

@@ -15,15 +15,6 @@ const MarkdownRenderer: React.FC<Props> = ({ content, contentType = 'MARKDOWN' }
     return <pre className={styles.plainText}>{content}</pre>;
   }
 
-  if (contentType === 'HTML') {
-    return (
-      <div
-        className={styles.markdown}
-        dangerouslySetInnerHTML={{ __html: content }}
-      />
-    );
-  }
-
   return (
     <div className={styles.markdown}>
       <ReactMarkdown

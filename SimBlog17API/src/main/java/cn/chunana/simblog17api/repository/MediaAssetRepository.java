@@ -14,6 +14,12 @@ public interface MediaAssetRepository extends JpaRepository<MediaAsset, Long> {
     Optional<MediaAsset> findByStoredFileName(String storedFileName);
 
     List<MediaAsset> findByCreateTimeBefore(LocalDateTime threshold);
+
+    List<MediaAsset> findByArticleId(Long articleId);
+
+    Optional<MediaAsset> findByArticleIdAndStoredFileName(Long articleId, String storedFileName);
+
+    Optional<MediaAsset> findByArticleIdAndOriginalFileName(Long articleId, String originalFileName);
 }
 
 

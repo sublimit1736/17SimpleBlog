@@ -1,5 +1,5 @@
 import client from './client';
-import type {ApiResponse, Article, Comment, PageResponse, User} from '../types';
+import type {ApiResponse, Comment, PageResponse, User} from '../types';
 
 export const adminApi = {
     promoteUser: (userId: number) =>
@@ -7,12 +7,6 @@ export const adminApi = {
 
     demoteUser: (userId: number) =>
         client.put<ApiResponse<void>>(`/admin/users/${userId}/demote`),
-
-    getPendingArticles: (page = 0, size = 10) =>
-        client.get<ApiResponse<PageResponse<Article>>>('/admin/articles/pending', {params: {page, size}}),
-
-    updateArticleStatus: (id: number, status: number) =>
-        client.put<ApiResponse<void>>(`/admin/articles/${id}/status`, {status}),
 
     getAllComments: (status?: number, page = 0, size = 20) =>
         client.get<ApiResponse<PageResponse<Comment>>>('/admin/comments', {params: {status, page, size}}),

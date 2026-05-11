@@ -15,7 +15,7 @@ import {Loading} from '../components/ui/Loading';
 import {usePageTitle} from '../hooks/usePageTitle';
 import styles from './ProfilePage.module.css';
 
-type ProfileTab = 'articles' | 'likes' | 'favorites' | 'drafts';
+type ProfileTab = 'articles' | 'likes' | 'favorites';
 
 const ProfilePage: React.FC = () => {
     usePageTitle('个人主页');
@@ -59,7 +59,6 @@ const ProfilePage: React.FC = () => {
             if (tab === 'articles') res = await articlesApi.getByAuthor(userId, page, 10);
             else if (tab === 'likes') res = await articlesApi.getLikedArticles(userId, page, 10);
             else if (tab === 'favorites') res = await articlesApi.getFavoritedArticles(userId, page, 10);
-            else if (tab === 'drafts') res = await articlesApi.getDrafts(userId, page, 10);
 
             if (res && res.data.statusCode === 0) {
                 setArticles(res.data.data.content);
@@ -158,10 +157,9 @@ const ProfilePage: React.FC = () => {
     }
 
     const tabs: { key: ProfileTab; label: string; show: boolean }[] = [
-        {key: 'articles', label: '📝 文章', show: true},
-        {key: 'likes', label: '👍 点赞', show: isSelf},
-        {key: 'favorites', label: '⭐ 收藏', show: isSelf},
-        {key: 'drafts', label: '📋 草稿', show: isSelf},
+        {key: 'articles', label: '文章', show: true},
+        {key: 'likes', label: '点赞', show: isSelf},
+        {key: 'favorites', label: '收藏', show: isSelf},
     ];
 
     return (
@@ -232,12 +230,11 @@ const ProfilePage: React.FC = () => {
                 <ArticleList
                     articles={articles}
                     loading={loadingArticles}
-                    showStatus={tab === 'drafts'}
+                    showStatus={false}
                     emptyText={
                         tab === 'articles' ? '还没有发布文章' :
                             tab === 'likes' ? '还没有点赞的文章' :
-                                tab === 'favorites' ? '还没有收藏的文章' :
-                                    '还没有草稿'
+                                '还没有收藏的文章'
                     }
                 />
                 <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage}/>

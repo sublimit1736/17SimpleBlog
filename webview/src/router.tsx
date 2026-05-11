@@ -7,7 +7,7 @@ import ArticleDetailPage from './pages/ArticleDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import ProfilePage from './pages/ProfilePage';
-import WriteArticlePage from './pages/WriteArticlePage';
+import UploadArticlePage from './pages/UploadArticlePage';
 import AdminPage from './pages/AdminPage';
 import NotificationsPage from './pages/NotificationsPage';
 import SearchPage from './pages/SearchPage';
@@ -30,8 +30,7 @@ const router = createBrowserRouter([
     {
         element: <RequireAuth/>,
         children: [
-            {path: '/write', element: <WriteArticlePage/>},
-            {path: '/edit/:id', element: <WriteArticlePage/>},
+            {path: '/write', element: <UploadArticlePage/>},
             {path: '/notifications', element: <NotificationsPage/>},
         ],
     },

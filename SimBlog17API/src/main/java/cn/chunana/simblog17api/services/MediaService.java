@@ -8,5 +8,11 @@ public interface MediaService {
     MediaUploadResponse uploadImage(MultipartFile file, Long uploaderId);
 
     MediaUploadResponse uploadAvatar(MultipartFile file, Long targetUserId, Long currentUserId, boolean isAdmin);
+
+    /**
+     * Upload an image that belongs to a specific article's namespace.
+     * The file is stored under {@code {storagePath}/articles/{articleId}/}.
+     */
+    MediaUploadResponse uploadArticleImage(MultipartFile file, Long articleId, Long uploaderId);
 }
 

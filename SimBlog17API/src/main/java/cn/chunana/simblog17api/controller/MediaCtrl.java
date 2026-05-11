@@ -3,6 +3,8 @@ package cn.chunana.simblog17api.controller;
 import cn.chunana.simblog17api.common.Status;
 import cn.chunana.simblog17api.dto.response.ApiStatusResponse;
 import cn.chunana.simblog17api.dto.response.MediaUploadResponse;
+import cn.chunana.simblog17api.entities.MediaAsset;
+import cn.chunana.simblog17api.repository.MediaAssetRepository;
 import cn.chunana.simblog17api.services.MediaService;
 import cn.chunana.simblog17api.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +29,8 @@ import java.nio.file.Path;
 @Tag(name = "媒体", description = "图片上传与访问接口")
 public class MediaCtrl {
 
-    private final MediaService mediaService;
+    private final MediaService         mediaService;
+    private final MediaAssetRepository mediaAssetRepository;
 
     @Value("${app.media.storage-path:uploads}")
     private String storagePath;
@@ -72,4 +75,5 @@ public class MediaCtrl {
         }
     }
 }
+
 

@@ -202,7 +202,7 @@ const ArticleDetailPage: React.FC = () => {
 
     const isAuthor = user?.id === article.authorId;
     const isAdmin = user?.role === 'ADMIN';
-    const canEdit = isAuthor || isAdmin;
+    const canDelete = isAuthor || isAdmin;
 
     const timeStr = (() => {
         try {
@@ -305,14 +305,8 @@ const ArticleDetailPage: React.FC = () => {
                         <span className={styles.heroMetaSep}>·</span>
                         <span>{article.viewCount} 次浏览</span>
                     </div>
-                    {canEdit && (
+                    {canDelete && (
                         <div className={styles.heroActions}>
-                            <button
-                                className={styles.heroActionBtn}
-                                onClick={() => navigate(`/edit/${article.id}`)}
-                            >
-                                编辑
-                            </button>
                             <button
                                 className={`${styles.heroActionBtn} ${styles.heroActionDanger}`}
                                 onClick={handleDeleteArticle}

@@ -21,6 +21,10 @@ public class MediaAsset {
     @Column(nullable = false)
     private Long uploaderId;
 
+    /** Non-null when this asset belongs to a specific article's namespace. */
+    @Column
+    private Long articleId;
+
     @Column(nullable = false, length = 255)
     private String originalFileName;
 

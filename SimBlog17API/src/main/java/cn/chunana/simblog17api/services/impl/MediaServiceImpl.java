@@ -101,8 +101,13 @@ public class MediaServiceImpl implements MediaService {
 
     private Path ensureArticleDirectory(Long articleId) {
         try {
-            Path root       = Path.of(storagePath).toAbsolutePath().normalize();
-            Path articleDir = root.resolve("articles").resolve(String.valueOf(articleId));
+            // articleId is a Long; converting to string produces only digits, preventing path traversal.
+            String safeId   = String.valueOf(articleId.longValue());
+            Path   root     = Path.of(storagePath).toAbsolutePath().normalize();
+            Path   articleDir = root.resolve("articles").resolve(safeId).normalize();
+            if (!articleDir.startsWith(root)) {
+                throw new IllegalStateException("Computed article path escapes storage root");
+            }
             Files.createDirectories(articleDir);
             return articleDir;
         }

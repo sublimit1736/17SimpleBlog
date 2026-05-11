@@ -197,7 +197,8 @@ public class ArticleServiceImpl implements ArticleService {
             String scopedUrl = "/api/articles/" + articleId + "/image/" + stored;
             result = result
                     .replace("](" + original + ")", "](" + scopedUrl + ")")
-                    .replace("](./\\" + original + ")", "](" + scopedUrl + ")");
+                    .replace("](./\\" + original + ")", "](" + scopedUrl + ")")
+                    .replace("](./" + original + ")", "](" + scopedUrl + ")");
         }
         return result;
     }
